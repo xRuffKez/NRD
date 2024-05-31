@@ -9,7 +9,7 @@ Learn more [here](https://unit42.paloaltonetworks.com/newly-registered-domains-m
 ### 14-Day List
 - Contains domains registered over the past 14 days.
 - Available in the following formats:
-  - Adblock format: Pi-hole, AdGuard (too big!), AdGuard Home, eBlocker, uBlock, AdBlock, AdBlock Plus, Opera, Vivaldi, Brave, AdNauseam.
+  - Adblock format: Pi-hole, ~AdGuard~ (too big!), AdGuard Home, eBlocker, uBlock, AdBlock, AdBlock Plus, Opera, Vivaldi, Brave, AdNauseam.
   - Plain domain format: DNSCloak, DNSCrypt, TechnitiumDNS, PersonalDNSfilter, InviZible Pro.
   - Asterisk format: Blocky (v0.23 or newer), Nebulo, NetDuma, OPNsense, YogaDNS.
 
