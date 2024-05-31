@@ -2,7 +2,7 @@
 
 This repository contains NRD (Newly Registered Domains) lists for various adblockers and DNS filtering solutions. The lists are provided in multiple formats to support different tools and applications. These lists help enhance privacy and reduce unwanted traffic by blocking newly registered domains that are often associated with advertisements, trackers, and other unwanted content.
 It also prevents new threats, because NRD are favored by black hats.
-Learn more (here)[https://unit42.paloaltonetworks.com/newly-registered-domains-malicious-abuse-by-bad-actors/]
+Learn more [here](https://unit42.paloaltonetworks.com/newly-registered-domains-malicious-abuse-by-bad-actors/)
 
 ## Available Lists
 
