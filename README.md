@@ -87,4 +87,4 @@ For enhanced blocking capabilities, consider using the following DNS blocklists 
 
 ## License
 
-This project is licensed under the GPL 3.0 License. See the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the DBAD License. See the [LICENSE](LICENSE.md) file for details.
