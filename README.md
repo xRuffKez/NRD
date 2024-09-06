@@ -201,7 +201,7 @@ Explore Hagezi's blocklists here: [Hagezi DNS Blocklists](https://github.com/Hag
 
 ## License
 
-This project is licensed under the **DBAD License**.  
-For more information, see the [LICENSE.md](LICENSE.md) file.
+This project is licensed under the **MIT License**.  
+For more information, see the [LICENSE](LICENSE) file.
 
 ---
