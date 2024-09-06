@@ -63,7 +63,7 @@ These lists are available in various formats to suit different adblockers and DN
 The NRD lists are compiled by continuously monitoring domain registration databases, focusing on identifying new domains as they are registered. Here's how the process works:
 
 1. **Domain Registration Tracking:**  
-   We gather data from publicly available sources such as WHOIS services and other domain registries. These sources provide information on recently registered domains across various top-level domains (TLDs).
+   I gather data from publicly available sources such as WHOIS services and other domain registries. These sources provide information on recently registered domains across various top-level domains (TLDs).
 
 2. **Filtering & Processing:**  
    The raw data is filtered to remove common legitimate domains (such as those used by major tech companies or services), leaving a list of potentially suspicious NRDs.
