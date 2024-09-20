@@ -39,8 +39,8 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add output/
-          git commit -m "Auto-commit: Update output files"
+          git add output/*
+          git commit -m "Update NRD files"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
