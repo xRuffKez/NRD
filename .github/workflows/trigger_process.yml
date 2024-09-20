@@ -2,8 +2,8 @@ name: Scheduled Execution of process.py
 
 on:
   schedule:
-    - cron: '10 4 * * *'  # Expected execution time
-    - cron: '00 5 * * *'  # Backup time
+    - cron: '10 4 * * *'
+    - cron: '00 5 * * *'
   workflow_dispatch:
 
 jobs:
