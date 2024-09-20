@@ -1,20 +1,19 @@
-name: Scheduled Execution of process.py
+name: Scheduled Script Execution
 
 on:
   schedule:
     - cron: '10 4 * * *'
     - cron: '00 5 * * *'
+
   workflow_dispatch:
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
-        run: |
-          git clone https://github.com/${{ github.repository }}.git
-          cd ${{ github.repository }}
+        uses: actions/checkout@v3
 
       - name: Set up Python
         run: |
@@ -26,21 +25,23 @@ jobs:
         run: |
           pip3 install --upgrade pip
           pip3 install requests
-          
+
       - name: Run script
         env:
           NORDOMAIN_30DAY_URL: ${{ secrets.NORDOMAIN_30DAY_URL }}
           NORDOMAIN_14DAY_URL: ${{ secrets.NORDOMAIN_14DAY_URL }}
           PHISHING_30DAY_URL: ${{ secrets.PHISHING_30DAY_URL }}
           PHISHING_14DAY_URL: ${{ secrets.PHISHING_14DAY_URL }}
-        run: python src/process.py
+        run: |
+          python3 src/process.py
 
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add output/
-          git commit -m "Update NRD Lists"
+          git commit -m "Auto-commit: Update output files"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
