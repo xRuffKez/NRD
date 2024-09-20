@@ -35,13 +35,16 @@ jobs:
         run: |
           python3 src/process.py
 
+      - name: Move output files to root
+        run: |
+          mv output/* .
+
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add output/*
-          git commit -m "Update NRD files"
+          git add *.txt
+          git commit -m "Update NRD Lists ($(date +'%Y-%m-%d'))"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
