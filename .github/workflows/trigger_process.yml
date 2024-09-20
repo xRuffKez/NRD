@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '10 4 * * *'  # Expected execution time
     - cron: '00 5 * * *'  # Backup time
+  workflow_dispatch:
 
 jobs:
   run-script:
