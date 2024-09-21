@@ -2,7 +2,6 @@ name: Scheduled Script Execution
 
 on:
   schedule:
-    - cron: '10 4 * * *'
     - cron: '00 5 * * *'
 
   workflow_dispatch:
