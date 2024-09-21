@@ -3,7 +3,6 @@ name: Scheduled Script Execution
 on:
   schedule:
     - cron: '00 5 * * *'
-
   workflow_dispatch:
 
 jobs:
