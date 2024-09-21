@@ -49,7 +49,8 @@ jobs:
           mkdir lists/14-day/unbound
           mkdir lists/30-day/unbound
           mv output/nrd-14day.txt lists/14-day/domains-only
-          mv output/nrd-30day.txt lists/30-day/domains-only
+          mv output/nrd-30day_part1.txt lists/30-day/domains-only
+          mv output/nrd-30day_part2.txt lists/30-day/domains-only
           mv output/nrd-14day_adblock.txt lists/14-day/adblock
           mv output/nrd-30day_adblock_part1.txt lists/30-day/adblock
           mv output/nrd-30day_adblock_part2.txt lists/30-day/adblock
