@@ -81,19 +81,16 @@ jobs:
           mv output/nrd-phishing-14day.txt lists/14-day_phishing/domains-only
           mv output/nrd-phishing-30day.txt lists/30-day_phishing/domains-only
           mv output/nrd-phishing-14day_adblock.txt lists/14-day_phishing/adblock
-          mv output/nrd-phishing-30day_adblock_part1.txt lists/30-day_phishing/adblock
-          mv output/nrd-phishing-30day_adblock_part2.txt lists/30-day_phishing/adblock
+          mv output/nrd-phishing-30day_adblock.txt lists/30-day_phishing/adblock
           mv output/nrd-phishing-14day_base64.txt lists/14-day_phishing/base64
-          mv output/nrd-phishing-30day_base64_part1.txt lists/30-day_phishing/base64
-          mv output/nrd-phishing-30day_base64_part2.txt lists/30-day_phishing/base64
+          mv output/nrd-phishing-30day_base64.txt lists/30-day_phishing/base64
           mv output/nrd-phishing-14day_unbound_part1.txt lists/14-day_phishing/unbound
           mv output/nrd-phishing-14day_unbound_part2.txt lists/14-day_phishing/unbound
           mv output/nrd-phishing-30day_unbound_part1.txt lists/30-day_phishing/unbound
           mv output/nrd-phishing-30day_unbound_part2.txt lists/30-day_phishing/unbound
           mv output/nrd-phishing-30day_unbound_part3.txt lists/30-day_phishing/unbound
           mv output/nrd-phishing-14day_wildcard.txt lists/14-day_phishing/wildcard
-          mv output/nrd-phishing-30day_wildcard_part1.txt lists/30-day_phishing/wildcard
-          mv output/nrd-phishing-30day_wildcard_part2.txt lists/30-day_phishing/wildcard
+          mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard
 
       - name: Commit and push changes
         run: |
