@@ -7,6 +7,12 @@ This repository provides **Newly Registered Domains (NRD)** lists tailored for v
 
 ---
 
+# Next update in
+
+![Countdown](https://your-dynamic-badge-service.com/api/countdown?end=5:10&timezone=UTC)
+
+---
+
 ## Table of Contents
 
 - [Overview](#overview)
