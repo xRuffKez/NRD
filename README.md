@@ -9,7 +9,7 @@ This repository provides **Newly Registered Domains (NRD)** lists tailored for v
 
 # Next update in
 
-![Countdown](https://your-dynamic-badge-service.com/api/countdown?end=5:10&timezone=UTC)
+![Countdown](https://img.shields.io/badge/dynamic/json?url=https://your-api.com/countdown&label=Next%20update&query=next_update)
 
 ---
 
