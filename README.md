@@ -3,13 +3,8 @@
 
 ## Block New Threats Before They Emerge
 
+![Next update](https://img.shields.io/badge/Next_Update-05:00_UTC-blue)
 This repository provides **Newly Registered Domains (NRD)** lists tailored for various ad-blocking and DNS filtering solutions. These lists aim to enhance privacy and security by blocking newly registered domains often used for ads, tracking, and other unwanted activities. NRDs are also a common choice for malicious actors, making these lists an effective tool for threat mitigation.
-
----
-
-# Next update in
-
-![Countdown](https://img.shields.io/badge/dynamic/json?url=https://your-api.com/countdown&label=Next%20update&query=next_update)
 
 ---
 
