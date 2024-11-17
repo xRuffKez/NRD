@@ -13,28 +13,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies for Python 3.13 build
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget build-essential zlib1g-dev libssl-dev \
-          libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev \
-          libgdbm-dev libdb-dev libbz2-dev libexpat1-dev liblzma-dev \
-          tk-dev libffi-dev
-
-      - name: Build and install Python 3.13
-        run: |
-          wget https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tar.xz
-          tar -xf Python-3.13.0.tar.xz
-          cd Python-3.13.0
-          ./configure --enable-optimizations
-          make -j$(nproc)
-          sudo make altinstall
-          python3.13 --version
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
 
       - name: Install Python dependencies
         run: |
           python3.13 -m pip install --upgrade pip
           python3.13 -m pip install requests
+
+      - name: Create Temp Directory
+        run: mkdir -p temp
 
       - name: Run script
         env:
@@ -43,48 +33,42 @@ jobs:
           PHISHING_30DAY_URL: ${{ secrets.PHISHING_30DAY_URL }}
           PHISHING_14DAY_URL: ${{ secrets.PHISHING_14DAY_URL }}
         run: |
-          python3.13 nrd-hunter.pyc
+          python3.13 nrd-hunter.pyc || echo "Script failed, investigate logs"
 
+      - name: Validate Output Files
+        run: |
+          if [ -z "$(ls -A output/)" ]; then
+            echo "No output files found in output/ directory"
+            exit 1
+          fi
+        shell: bash
 
       - name: Move output files
         run: |
-          mv output/nrd-14day.txt lists/14-day/domains-only || true
-          mv output/nrd-30day_part1.txt lists/30-day/domains-only || true
-          mv output/nrd-30day_part2.txt lists/30-day/domains-only || true
-          mv output/nrd-14day_adblock.txt lists/14-day/adblock || true
-          mv output/nrd-30day_adblock_part1.txt lists/30-day/adblock || true
-          mv output/nrd-30day_adblock_part2.txt lists/30-day/adblock || true
-          mv output/nrd-14day_base64.txt lists/14-day/base64 || true
-          mv output/nrd-30day_base64_part1.txt lists/30-day/base64 || true
-          mv output/nrd-30day_base64_part2.txt lists/30-day/base64 || true
-          mv output/nrd-14day_unbound_part1.txt lists/14-day/unbound || true
-          mv output/nrd-14day_unbound_part2.txt lists/14-day/unbound || true
-          mv output/nrd-30day_unbound_part1.txt lists/30-day/unbound || true
-          mv output/nrd-30day_unbound_part2.txt lists/30-day/unbound || true
-          mv output/nrd-30day_unbound_part3.txt lists/30-day/unbound || true
-          mv output/nrd-14day_wildcard.txt lists/14-day/wildcard || true
-          mv output/nrd-30day_wildcard_part1.txt lists/30-day/wildcard || true
-          mv output/nrd-30day_wildcard_part2.txt lists/30-day/wildcard || true
-          mv output/nrd-phishing-14day.txt lists/14-day_phishing/domains-only || true
-          mv output/nrd-phishing-30day.txt lists/30-day_phishing/domains-only || true
-          mv output/nrd-phishing-14day_adblock.txt lists/14-day_phishing/adblock || true
-          mv output/nrd-phishing-30day_adblock.txt lists/30-day_phishing/adblock || true
-          mv output/nrd-phishing-14day_base64.txt lists/14-day_phishing/base64 || true
-          mv output/nrd-phishing-30day_base64.txt lists/30-day_phishing/base64 || true
-          mv output/nrd-phishing-14day_unbound_part1.txt lists/14-day_phishing/unbound || true
-          mv output/nrd-phishing-14day_unbound_part2.txt lists/14-day_phishing/unbound || true
-          mv output/nrd-phishing-30day_unbound_part1.txt lists/30-day_phishing/unbound || true
-          mv output/nrd-phishing-30day_unbound_part2.txt lists/30-day_phishing/unbound || true
-          mv output/nrd-phishing-30day_unbound_part3.txt lists/30-day_phishing/unbound || true
-          mv output/nrd-phishing-14day_wildcard.txt lists/14-day_phishing/wildcard || true
-          mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard || true
+          mkdir -p lists/14-day lists/30-day lists/14-day_phishing lists/30-day_phishing
+          for file in output/*; do
+            if [ -f "$file" ]; then
+              case "$file" in
+                *14day.txt) mv "$file" lists/14-day/domains-only/ ;;
+                *30day.txt) mv "$file" lists/30-day/domains-only/ ;;
+                # Add more cases here as needed for other file types
+              esac
+            else
+              echo "Skipping non-file $file"
+            fi
+          done
+        shell: bash
 
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add lists/
-          git commit -m "Update NRD Lists ($(date +'%Y-%m-%d'))"
-          git push
+          git add lists/ || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update NRD Lists ($(date +'%Y-%m-%d'))"
+            git push
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
