@@ -5,6 +5,7 @@ import requests
 import re
 import json
 import shutil
+import idna
 from datetime import datetime
 
 def download_file_if_etag_changed(url, dest, etag_file):
@@ -67,7 +68,17 @@ def encode_base64(string):
 
 def extract_domains(decoded_str):
     domain_pattern = r'(?<!@)(?:[\w-]+\.)+[a-zA-Z]{2,}(?!\.)'
-    return re.findall(domain_pattern, decoded_str)
+    raw_domains = re.findall(domain_pattern, decoded_str)
+    punycoded_domains = set()
+
+    for domain in raw_domains:
+        try:
+            punycoded_domains.add(idna.encode(domain).decode('ascii'))
+        except idna.IDNAError:
+            # If conversion fails, fallback to the original domain
+            punycoded_domains.add(domain)
+
+    return list(punycoded_domains)
 
 def write_header(outfile, description, num_entries=0):
     now = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
