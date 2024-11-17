@@ -91,20 +91,6 @@ def decode_file(input_file, output_file, adblock_output_file, wildcard_output_fi
                     decoded_str = decode_base64(encoded_str)
                     domains.update(extract_domains(decoded_str))
 
-        num_entries = len(domains)
-
-        with open(output_file, 'w', encoding='utf-8') as outfile, \
-             open(adblock_output_file, 'w', encoding='utf-8') as adblock_outfile, \
-             open(wildcard_output_file, 'w', encoding='utf-8') as wildcard_outfile, \
-             open(unbound_output_file, 'w', encoding='utf-8') as unbound_outfile, \
-             open(base64_output_file, 'w', encoding='utf-8') as base64_outfile:
-
-            write_header(outfile, description, num_entries)
-            write_header(adblock_outfile, description + " (Adblock format)", num_entries)
-            write_header(wildcard_outfile, description + " (Wildcard format)", num_entries)
-            write_header(unbound_outfile, description + " (Unbound format)", num_entries)
-            write_header(base64_outfile, description + " (Base64 format)", num_entries)
-
             for domain in sorted(domains):
                 outfile.write(domain + '\n')
                 adblock_outfile.write(f'||{domain}^\n')
@@ -130,12 +116,10 @@ def split_into_two_files(input_file):
         part2 = base_name + "_part2.txt"
         
         with open(part1, 'w', encoding='utf-8') as outfile:
-            write_header(outfile, f"Part 1 of 2", num_entries=len(lines[:halfway]))
             outfile.writelines(lines[:halfway])
         part_files.append(part1)
         
         with open(part2, 'w', encoding='utf-8') as outfile:
-            write_header(outfile, f"Part 2 of 2", num_entries=len(lines[halfway:]))
             outfile.writelines(lines[halfway:])
         part_files.append(part2)
         
@@ -162,17 +146,14 @@ def split_into_three_files(input_file):
         part3 = base_name + "_part3.txt"
         
         with open(part1, 'w', encoding='utf-8') as outfile:
-            write_header(outfile, f"Part 1 of 3", num_entries=len(lines[:third]))
             outfile.writelines(lines[:third])
         part_files.append(part1)
         
         with open(part2, 'w', encoding='utf-8') as outfile:
-            write_header(outfile, f"Part 2 of 3", num_entries=len(lines[third:2*third]))
             outfile.writelines(lines[third:2*third])
         part_files.append(part2)
         
         with open(part3, 'w', encoding='utf-8') as outfile:
-            write_header(outfile, f"Part 3 of 3", num_entries=len(lines[2*third:]))
             outfile.writelines(lines[2*third:])
         part_files.append(part3)
         
