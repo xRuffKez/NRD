@@ -144,15 +144,31 @@ def process_files():
             (base64_output_file, "default"),
             (unbound_output_file, "default")
         ]
-        for file, _ in files_to_split:
+
+        for file, split_option in files_to_split:
             if os.path.exists(file):
-                if "unbound" in file and "30day" in file:
-                    part_files = split_into_three_files(file)
-                else:
-                    part_files = split_into_two_files(file)
-                output_files.update(part_files)
-                split_files.update(part_files)
+                try:
+                    print(f"Processing {file} for splitting.")
+                    if "unbound" in file:
+                        if "30day" in file:
+                            part_files = split_into_three_files(file)
+                        else:
+                            part_files = split_into_two_files(file)
+                    else:
+                        if file not in [output_file, adblock_output_file, wildcard_output_file, base64_output_file] or ("14day" not in file and "phishing" not in file):
+                            part_files = split_into_two_files(file)
+                        else:
+                            part_files = [file]
+
+                    output_files.update(part_files)
+                    split_files.update(part_files)
+                except Exception as e:
+                    print(f"Failed to split {file}: {e}")
+            else:
+                print(f"File not found, cannot split: {file}")
+    
     shutil.rmtree(temp_dir)
+
     return [os.path.basename(f) for f in output_files if '.' in f]
 
 if __name__ == '__main__':
