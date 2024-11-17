@@ -33,7 +33,7 @@ jobs:
           PHISHING_30DAY_URL: ${{ secrets.PHISHING_30DAY_URL }}
           PHISHING_14DAY_URL: ${{ secrets.PHISHING_14DAY_URL }}
         run: |
-          python3.13 nrd-hunter.pyc || echo "Script failed, investigate logs"
+          python3.13 src/nrd-hunter.py || echo "Script failed, investigate logs"
 
       - name: Validate Output Files
         run: |
