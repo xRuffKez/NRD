@@ -20,10 +20,12 @@ def download_file(url, dest):
     except Exception as e:
         print(f"Error downloading {url}: {e}")
         return False
+
 def extract_tar_gz(file_path, dest_dir):
     try:
         with tarfile.open(file_path, "r:gz") as tar:
             for member in tar.getmembers():
+                print(f"Extracting: {member.name}")  # Debug: List all files being extracted
                 if "rules" in member.name and not member.name.endswith('.rules'):
                     tar.extract(member, path=dest_dir)
                 elif member.isfile() and not (member.name.endswith('.rules') or member.name == 'COPYRIGHT'):
