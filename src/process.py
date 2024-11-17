@@ -49,8 +49,7 @@ def decode_file(input_file, output_file, adblock_output_file, wildcard_output_fi
             encoded_str = line.strip()
             if encoded_str:
                 decoded_str = decode_base64(encoded_str)
-                extracted = extract_domains(decoded_str)
-                domains.update(extracted - exclusions)
+                extracted = domains.update(set(extracted) - exclusions)
     with open(output_file, 'w', encoding='utf-8') as outfile, \
          open(adblock_output_file, 'w', encoding='utf-8') as adblock_outfile, \
          open(wildcard_output_file, 'w', encoding='utf-8') as wildcard_outfile, \
