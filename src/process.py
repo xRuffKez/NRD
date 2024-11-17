@@ -195,14 +195,31 @@ def split_into_three_files(input_file):
     
     return part_files
 
+def load_exclusions(exclusion_dir='lists', exclusion_filename='exclusions'):
+    exclusion_file = os.path.join(exclusion_dir, exclusion_filename)
+    try:
+        with open(exclusion_file, 'r', encoding='utf-8') as f:
+            exclusions = {line.strip() for line in f if line.strip() and not line.startswith('#')}
+        print(f"Loaded {len(exclusions)} exclusions from {exclusion_file}")
+        return exclusions
+    except FileNotFoundError:
+        print(f"Exclusion file {exclusion_file} not found. No exclusions applied.")
+        return set()
+    except Exception as e:
+        print(f"Failed to load exclusions from {exclusion_file}: {e}")
+        return set()
+
 def process_files():
+    exclusion_dir = 'lists'
+    exclusion_filename = 'exclusions'
+    exclusions = load_exclusions(exclusion_dir, exclusion_filename)
+    
     urls = [
         {"url": os.getenv('NORDOMAIN_30DAY_URL'), "description": "30-day Domain List", "expected_file": "nrd-30day"},
         {"url": os.getenv('NORDOMAIN_14DAY_URL'), "description": "14-day Domain List", "expected_file": "nrd-14day"},
         {"url": os.getenv('PHISHING_30DAY_URL'), "description": "30-day Phishing Domain List", "expected_file": "nrd-phishing-30day"},
         {"url": os.getenv('PHISHING_14DAY_URL'), "description": "14-day Phishing Domain List", "expected_file": "nrd-phishing-14day"}
     ]
-    
     
     temp_dir = 'temp'
     output_dir = 'output'
@@ -240,7 +257,7 @@ def process_files():
             continue
         
         try:
-            decode_file(input_file, output_file, adblock_output_file, wildcard_output_file, unbound_output_file, base64_output_file, description)
+            decode_file(input_file, output_file, adblock_output_file, wildcard_output_file, unbound_output_file, base64_output_file, description, exclusions)
         except Exception as e:
             print(f"Failed to decode {input_file}: {e}")
             continue
