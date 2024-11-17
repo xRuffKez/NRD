@@ -72,8 +72,12 @@ jobs:
           if [ -f output/nrd-phishing-14day_wildcard.txt ]; then mv output/nrd-phishing-14day_wildcard.txt lists/14-day_phishing/wildcard; else echo "File nrd-phishing-14day_wildcard.txt not found"; fi
           if [ -f output/nrd-phishing-30day_wildcard.txt ]; then mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard; else echo "File nrd-phishing-30day_wildcard.txt not found"; fi
 
-      - name: Commit and push changes
+   - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add -
+          git add lists/
+          git commit -m "Update NRD Lists ($(date +'%Y-%m-%d'))"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
