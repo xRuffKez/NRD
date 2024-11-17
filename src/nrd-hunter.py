@@ -58,7 +58,7 @@ def process_decoded_domains(input_file, exclusions, output_files):
                 with open(output_files[key], 'a', encoding='utf-8') as f:
                     f.write(template.format(domain))
 
-def load_exclusions(exclusion_dir='lists', exclusion_filename='exclusions'):
+def load_exclusions(exclusion_dir='lists', exclusion_filename='exclusion'):
     exclusion_file = os.path.join(exclusion_dir, exclusion_filename)
     try:
         with open(exclusion_file, 'r', encoding='utf-8') as f:
