@@ -25,12 +25,14 @@ def extract_tar_gz(file_path, dest_dir):
     try:
         with tarfile.open(file_path, "r:gz") as tar:
             for member in tar.getmembers():
-                print(f"Extracting: {member.name}")  # Debug: List all files being extracted
-                if "rules" in member.name and not member.name.endswith('.rules'):
+                # Strip out the folder structure and extract to the destination directory
+                # This will remove the leading directories from the file names
+                member.name = os.path.basename(member.name)
+                
+                # Only extract files (not directories)
+                if member.isfile() and not (member.name.endswith('.rules') or member.name == 'COPYRIGHT'):
                     tar.extract(member, path=dest_dir)
-                elif member.isfile() and not (member.name.endswith('.rules') or member.name == 'COPYRIGHT'):
-                    tar.extract(member, path=dest_dir)
-        print(f"Extracted: {file_path}")
+                    print(f"Extracted: {member.name}")  # Debug: print each extracted file name
     except Exception as e:
         print(f"Failed to extract {file_path}: {e}")
 
