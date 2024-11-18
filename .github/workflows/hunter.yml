@@ -31,7 +31,7 @@ jobs:
           PHISHING_30DAY_URL: ${{ secrets.PHISHING_30DAY_URL }}
           PHISHING_14DAY_URL: ${{ secrets.PHISHING_14DAY_URL }}
         run: |
-          python3 src/process.py
+          python3 src/nrd-hunter.py
 
       - name: Move output files
         run: |
