@@ -25,14 +25,10 @@ def extract_tar_gz(file_path, dest_dir):
     try:
         with tarfile.open(file_path, "r:gz") as tar:
             for member in tar.getmembers():
-                # Strip out the folder structure and extract to the destination directory
-                # This will remove the leading directories from the file names
                 member.name = os.path.basename(member.name)
-                
-                # Only extract files (not directories)
                 if member.isfile() and not (member.name.endswith('.rules') or member.name == 'COPYRIGHT'):
                     tar.extract(member, path=dest_dir)
-                    print(f"Extracted: {member.name}")  # Debug: print each extracted file name
+                    print(f"Extracted: {member.name}")
     except Exception as e:
         print(f"Failed to extract {file_path}: {e}")
 
@@ -58,7 +54,6 @@ def process_decoded_domains(input_file, exclusions, output_files):
     with open(output_files['txt'], 'w', encoding='utf-8') as outfile:
         for domain in sorted(domains):
             outfile.write(f"{domain}\n")
-
             for key, template in output_files['templates'].items():
                 with open(output_files[key], 'a', encoding='utf-8') as f:
                     f.write(template.format(domain))
@@ -73,22 +68,42 @@ def load_exclusions(exclusion_dir='lists', exclusion_filename='exclusion'):
         print(f"Error loading exclusions: {e}")
         return set()
 
+def write_split_file(base_name, lines, part_index):
+    """Write a portion of lines to a split file."""
+    part_file = f"{base_name}_part{part_index + 1}.txt"
+    try:
+        with open(part_file, 'w', encoding='utf-8') as f:
+            f.writelines(lines)
+        print(f"Created split file: {part_file} with {len(lines)} lines.")
+        return part_file
+    except Exception as e:
+        print(f"Error writing split file {part_file}: {e}")
+        return None
+
 def split_file(input_file, parts=2):
+    """Split a file into multiple parts."""
     try:
         with open(input_file, 'r', encoding='utf-8') as infile:
             lines = infile.readlines()
+        if not lines:
+            print(f"No lines to split in file: {input_file}")
+            return []
+        
         part_size = len(lines) // parts
         base_name = os.path.splitext(input_file)[0]
-        return [write_split_file(base_name, lines[i * part_size:(i + 1) * part_size]) for i in range(parts)]
+        split_files = []
+        
+        for i in range(parts):
+            start_index = i * part_size
+            end_index = start_index + part_size if i < parts - 1 else len(lines)  # Include leftovers in the last part
+            split_file = write_split_file(base_name, lines[start_index:end_index], i)
+            if split_file:
+                split_files.append(split_file)
+        
+        return split_files
     except Exception as e:
         print(f"Error splitting {input_file}: {e}")
         return []
-
-def write_split_file(base_name, lines):
-    part_file = f"{base_name}_part{len(os.path.splitext(base_name))}.txt"
-    with open(part_file, 'w', encoding='utf-8') as f:
-        f.writelines(lines)
-    return part_file
 
 def process_files():
     exclusions = load_exclusions()
@@ -137,5 +152,3 @@ def process_files():
 if __name__ == '__main__':
     process_files()
     print("Processing complete.")
-
-  
