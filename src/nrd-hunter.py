@@ -110,6 +110,7 @@ def decode_file(
     unbound_output_file,
     base64_output_file,
     description,
+    exclusions=None,
 ):
     try:
         with open(input_file, "r", encoding="utf-8", errors="replace") as infile:
@@ -118,7 +119,12 @@ def decode_file(
                 encoded_str = line.strip()
                 if encoded_str:
                     decoded_str = decode_base64(encoded_str)
-                    domains.update(extract_domains(decoded_str))
+                    extracted_domains = extract_domains(decoded_str)
+                    if exclusions:
+                        extracted_domains = [
+                            d for d in extracted_domains if d not in exclusions
+                        ]
+                    domains.update(extracted_domains)
 
         num_entries = len(domains)
 
@@ -191,47 +197,7 @@ def split_into_two_files(input_file):
     return part_files
 
 
-def split_into_three_files(input_file):
-    part_files = []
-    try:
-        with open(input_file, "r", encoding="utf-8") as infile:
-            lines = infile.readlines()
-
-        third = len(lines) // 3
-        base_name = os.path.splitext(input_file)[0]
-
-        part1 = base_name + "_part1.txt"
-        part2 = base_name + "_part2.txt"
-        part3 = base_name + "_part3.txt"
-
-        with open(part1, "w", encoding="utf-8") as outfile:
-            write_header(outfile, f"Part 1 of 3", num_entries=len(lines[:third]))
-            outfile.writelines(lines[:third])
-        part_files.append(part1)
-
-        with open(part2, "w", encoding="utf-8") as outfile:
-            write_header(
-                outfile, f"Part 2 of 3", num_entries=len(lines[third : 2 * third])
-            )
-            outfile.writelines(lines[third : 2 * third])
-        part_files.append(part2)
-
-        with open(part3, "w", encoding="utf-8") as outfile:
-            write_header(outfile, f"Part 3 of 3", num_entries=len(lines[2 * third :]))
-            outfile.writelines(lines[2 * third :])
-        part_files.append(part3)
-
-        print(f"Split {input_file} into {part1}, {part2}, and {part3}")
-
-        os.remove(input_file)
-        print(f"Removed original file: {input_file}")
-    except Exception as e:
-        print(f"Failed to split {input_file}: {e}")
-
-    return part_files
-
-
-def load_exclusions(exclusion_dir="lists", exclusion_filename="exclusions"):
+def load_exclusions(exclusion_dir="lists", exclusion_filename="exclusion"):
     exclusion_file = os.path.join(exclusion_dir, exclusion_filename)
     try:
         with open(exclusion_file, "r", encoding="utf-8") as f:
@@ -297,77 +263,48 @@ def process_files():
         try:
             extract_tar_gz(file_name, temp_dir)
         except Exception as e:
-            print(f"Failed to extract {file_name}: {e}")
-            continue
+            print(f"Error extracting tarball {file_name}: {e}")
 
-        input_file = os.path.join(temp_dir, expected_file)
-        output_file = os.path.join(output_dir, f"{expected_file}.txt")
-        adblock_output_file = os.path.join(output_dir, f"{expected_file}_adblock.txt")
-        wildcard_output_file = os.path.join(output_dir, f"{expected_file}_wildcard.txt")
-        unbound_output_file = os.path.join(output_dir, f"{expected_file}_unbound.txt")
-        base64_output_file = os.path.join(output_dir, f"{expected_file}_base64.txt")
-
-        if not os.path.exists(input_file):
-            print(f"Expected input file {input_file} not found.")
-            continue
-
-        try:
-            decode_file(
-                input_file,
-                output_file,
-                adblock_output_file,
-                wildcard_output_file,
-                unbound_output_file,
-                base64_output_file,
-                description,
-                exclusions,
-            )
-        except Exception as e:
-            print(f"Failed to decode {input_file}: {e}")
-            continue
-
-        files_to_split = [
-            (output_file, "default"),
-            (adblock_output_file, "default"),
-            (wildcard_output_file, "default"),
-            (base64_output_file, "default"),
-            (unbound_output_file, "default"),
-        ]
-
-        for file, split_option in files_to_split:
-            if os.path.exists(file):
-                try:
-                    print(f"Processing {file} for splitting.")
-                    if "unbound" in file:
-                        if "30day" in file:
-                            part_files = split_into_three_files(file)
-                        else:
-                            part_files = split_into_two_files(file)
-                    else:
-                        if file not in [
+        for root, dirs, files in os.walk(temp_dir):
+            for file in files:
+                if file.startswith(expected_file):
+                    input_file = os.path.join(root, file)
+                    output_file = os.path.join(output_dir, f"{file}-decoded.txt")
+                    adblock_output_file = os.path.join(
+                        output_dir, f"{file}-decoded-adblock.txt"
+                    )
+                    wildcard_output_file = os.path.join(
+                        output_dir, f"{file}-decoded-wildcard.txt"
+                    )
+                    unbound_output_file = os.path.join(
+                        output_dir, f"{file}-decoded-unbound.txt"
+                    )
+                    base64_output_file = os.path.join(
+                        output_dir, f"{file}-decoded-base64.txt"
+                    )
+                    try:
+                        decode_file(
+                            input_file,
                             output_file,
                             adblock_output_file,
                             wildcard_output_file,
+                            unbound_output_file,
                             base64_output_file,
-                        ] or ("14day" not in file and "phishing" not in file):
-                            part_files = split_into_two_files(file)
-                        else:
-                            part_files = [file]
+                            description,
+                            exclusions,
+                        )
+                    except Exception as e:
+                        print(f"Error decoding file {input_file}: {e}")
 
-                    output_files.update(part_files)
-                    split_files.update(part_files)
-                except Exception as e:
-                    print(f"Failed to split {file}: {e}")
-            else:
-                print(f"File not found, cannot split: {file}")
+                    if os.stat(output_file).st_size > 1_048_576:  # Split if > 1 MB
+                        split_files.update(split_into_two_files(output_file))
 
-    shutil.rmtree(temp_dir)
+                    output_files.add(output_file)
 
-    return [os.path.basename(f) for f in output_files if "." in f]
+    for file in os.listdir(temp_dir):
+        path = os.path.join(temp_dir, file)
+        if os.path.isfile(path):
+            os.remove(path)
 
-
-if __name__ == "__main__":
-    decoded_files = process_files()
-
-    print("Files processed successfully.")
-    print(f"Generated files: {decoded_files}")
+    shutil.rmtree(temp_dir, ignore_errors=True)
+    print(f"Processing completed. Decoded files: {output_files}. Split files: {split_files}")
