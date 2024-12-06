@@ -1,21 +1,8 @@
 # Part 3 of 3
 # Author: xRuffKez
-# Time of Compilation: 2024-12-05 05:08:27 UTC
-# Number of entries: 2869
+# Time of Compilation: 2024-12-06 05:08:25 UTC
+# Number of entries: 2881
 #
-local-zone: "office-space-33744.bond" static
-local-zone: "office-space-33984.bond" static
-local-zone: "office-space-34277.bond" static
-local-zone: "office-space-34851.bond" static
-local-zone: "office-space-35740.bond" static
-local-zone: "office-space-37058.bond" static
-local-zone: "office-space-37336.bond" static
-local-zone: "office-space-38516.bond" static
-local-zone: "office-space-40233.bond" static
-local-zone: "office-space-41146.bond" static
-local-zone: "office-space-44831.bond" static
-local-zone: "office-space-45459.bond" static
-local-zone: "office-space-46169.bond" static
 local-zone: "office-space-50318.bond" static
 local-zone: "office-space-51385.bond" static
 local-zone: "office-space-51912.bond" static
@@ -27,9 +14,11 @@ local-zone: "office-space-59375.bond" static
 local-zone: "office-space-59528.bond" static
 local-zone: "office-space-60785.bond" static
 local-zone: "office-space-62025.bond" static
+local-zone: "office-space-65498.bond" static
 local-zone: "office-space-65544.bond" static
 local-zone: "office-space-72875.bond" static
 local-zone: "office-space-77251.bond" static
+local-zone: "office-space-77994.bond" static
 local-zone: "office-space-79433.bond" static
 local-zone: "office-space-80391.bond" static
 local-zone: "office-space-80445.bond" static
@@ -50,7 +39,6 @@ local-zone: "office-space-works.com" static
 local-zone: "office-space.cfd" static
 local-zone: "office-spaceboxmail-work.com" static
 local-zone: "office-spaces-work.com" static
-local-zone: "office-suezaki.com" static
 local-zone: "office-supplies.ru" static
 local-zone: "office-supply.wiki" static
 local-zone: "office-support.app" static
@@ -64,7 +52,6 @@ local-zone: "office-t.ru" static
 local-zone: "office-taa.com" static
 local-zone: "office-takeru.site" static
 local-zone: "office-teamgift.site" static
-local-zone: "office-techno.com" static
 local-zone: "office-techservice.com" static
 local-zone: "office-temps.co.uk" static
 local-zone: "office-temps.com" static
@@ -98,6 +85,7 @@ local-zone: "office.li" static
 local-zone: "office.life" static
 local-zone: "office.online" static
 local-zone: "office0.pro" static
+local-zone: "office06cleaning.xyz" static
 local-zone: "office0space.click" static
 local-zone: "office23.ru" static
 local-zone: "office2499.ru" static
@@ -147,6 +135,8 @@ local-zone: "officecc.space" static
 local-zone: "officechair298322.icu" static
 local-zone: "officechair603138.icu" static
 local-zone: "officechairdeals.shop" static
+local-zone: "officechairsonline627121.icu" static
+local-zone: "officechairsoutlet.top" static
 local-zone: "officechairsplus.top" static
 local-zone: "officeclean1.xyz" static
 local-zone: "officeclean11.xyz" static
@@ -155,6 +145,12 @@ local-zone: "officeclean12.live" static
 local-zone: "officeclean12.shop" static
 local-zone: "officeclean13.buzz" static
 local-zone: "officeclean13.live" static
+local-zone: "officeclean15.buzz" static
+local-zone: "officeclean15.live" static
+local-zone: "officeclean15.shop" static
+local-zone: "officeclean16.buzz" static
+local-zone: "officeclean16.live" static
+local-zone: "officeclean16.shop" static
 local-zone: "officeclean166.shop" static
 local-zone: "officeclean166.xyz" static
 local-zone: "officeclean186.shop" static
@@ -200,6 +196,7 @@ local-zone: "officecleaning059.shop" static
 local-zone: "officecleaning061.shop" static
 local-zone: "officecleaning078.xyz" static
 local-zone: "officecleaning09.buzz" static
+local-zone: "officecleaning1.info" static
 local-zone: "officecleaning10.buzz" static
 local-zone: "officecleaning10.shop" static
 local-zone: "officecleaning10.xyz" static
@@ -311,6 +308,7 @@ local-zone: "officecleaning954.shop" static
 local-zone: "officecleaning96.shop" static
 local-zone: "officecleaning996.shop" static
 local-zone: "officecleaningbest.xyz" static
+local-zone: "officecleaningcompany981213.icu" static
 local-zone: "officecleaningjobs.click" static
 local-zone: "officecleaningman.shop" static
 local-zone: "officecleanings02.shop" static
@@ -350,6 +348,7 @@ local-zone: "officedeskpurchase-hub.click" static
 local-zone: "officedeskpurchasehub.click" static
 local-zone: "officedesks.uk" static
 local-zone: "officedirectoring.shop" static
+local-zone: "officedirectory.co.uk" static
 local-zone: "officedochecking.info" static
 local-zone: "officedoor.app" static
 local-zone: "officedreams.xyz" static
@@ -361,7 +360,6 @@ local-zone: "officeeuk.shop" static
 local-zone: "officefadal.live" static
 local-zone: "officefast.shop" static
 local-zone: "officefew.shop" static
-local-zone: "officefinder.uk" static
 local-zone: "officefinders.co.uk" static
 local-zone: "officefit.co.uk" static
 local-zone: "officefurnish.co.uk" static
@@ -372,6 +370,7 @@ local-zone: "officefurniture-desk-experts.click" static
 local-zone: "officefurniture-deskexperts.click" static
 local-zone: "officefurnituredesk-experts.click" static
 local-zone: "officefurnituredeskexperts.click" static
+local-zone: "officefurnitureespana714889.icu" static
 local-zone: "officefurniturelondon.co.uk" static
 local-zone: "officefurnitures.co.uk" static
 local-zone: "officefurniturewarehouse.shop" static
@@ -379,6 +378,7 @@ local-zone: "officegb.info" static
 local-zone: "officegg.work" static
 local-zone: "officeglam.shop" static
 local-zone: "officegoods.top" static
+local-zone: "officeguru.uk" static
 local-zone: "officeguy.xyz" static
 local-zone: "officeh.info" static
 local-zone: "officehub.uk" static
@@ -405,9 +405,7 @@ local-zone: "officelife.xyz" static
 local-zone: "officelion.cn" static
 local-zone: "officelsupplies.info" static
 local-zone: "officem.work" static
-local-zone: "officemaails.xyz" static
 local-zone: "officemail-ondesktop.info" static
-local-zone: "officemail.icu" static
 local-zone: "officemailbox-mail.com" static
 local-zone: "officemailbox-work.com" static
 local-zone: "officemailspace-mail.com" static
@@ -429,7 +427,6 @@ local-zone: "officenter.ru" static
 local-zone: "officeo.top" static
 local-zone: "officeobsession.shop" static
 local-zone: "officeofextensionactivities.co.uk" static
-local-zone: "officeonline.info" static
 local-zone: "officeoptions.space" static
 local-zone: "officeosipov.ru" static
 local-zone: "officeoutfits.shop" static
@@ -437,7 +434,6 @@ local-zone: "officeoverloadsolutions.co.uk" static
 local-zone: "officep.work" static
 local-zone: "officephone.co.uk" static
 local-zone: "officephonesystems.co.uk" static
-local-zone: "officepicayunecountry.website" static
 local-zone: "officepie.pro" static
 local-zone: "officeplatformacess.fun" static
 local-zone: "officeplatformacesss.fun" static
@@ -449,8 +445,8 @@ local-zone: "officepods340576.icu" static
 local-zone: "officepods357891.icu" static
 local-zone: "officepods413891.icu" static
 local-zone: "officepods608999.icu" static
+local-zone: "officepourlapromotiondelhabitat.info" static
 local-zone: "officeprisme.space" static
-local-zone: "officepro24.info" static
 local-zone: "officeproducts.xyz" static
 local-zone: "officeproiec.pro" static
 local-zone: "officeprojector.shop" static
@@ -521,6 +517,7 @@ local-zone: "officespacerent015084.icu" static
 local-zone: "officespacerent201609.icu" static
 local-zone: "officespacerent435360.icu" static
 local-zone: "officespacerent866194.icu" static
+local-zone: "officespacerental540860.icu" static
 local-zone: "officespacerental851740.icu" static
 local-zone: "officespacesoho.co.uk" static
 local-zone: "officespacetruro.co.uk" static
@@ -535,8 +532,6 @@ local-zone: "officesuperlife.world" static
 local-zone: "officesupermarket.info" static
 local-zone: "officesupport.live" static
 local-zone: "officesupport.xyz" static
-local-zone: "officesurgicalservices.info" static
-local-zone: "officesurgicalservices.xyz" static
 local-zone: "officesviews.info" static
 local-zone: "officesystem.xyz" static
 local-zone: "officesystems.xyz" static
@@ -574,15 +569,16 @@ local-zone: "okta-support.help" static
 local-zone: "okta-wic-organization.com" static
 local-zone: "okta.agency" static
 local-zone: "okta.center" static
-local-zone: "okta.help" static
 local-zone: "okta.info" static
 local-zone: "okta.ink" static
 local-zone: "okta.news" static
+local-zone: "okta.one" static
 local-zone: "okta.report" static
 local-zone: "okta.support" static
 local-zone: "okta.website" static
 local-zone: "old-reddit.pro" static
 local-zone: "olive-law-office.com" static
+local-zone: "olive-oil-portal.sbs" static
 local-zone: "oliver-kitchen.co.uk" static
 local-zone: "oliviawdxdelivery.co.uk" static
 local-zone: "olx-ua-delivery.life" static
@@ -598,6 +594,8 @@ local-zone: "onedelivery.xyz" static
 local-zone: "oneoffice.uk" static
 local-zone: "online-apple.help" static
 local-zone: "online-grocery-delivery-123.bond" static
+local-zone: "online-grocery-delivery-90624.bond" static
+local-zone: "online-grocery-delivery-consultant.sbs" static
 local-zone: "online-investment-program-live.fyi" static
 local-zone: "online-kaco-delivery.com" static
 local-zone: "online-litigation-office.com" static
@@ -615,7 +613,6 @@ local-zone: "ontimedelivery.xyz" static
 local-zone: "op-telegram.com" static
 local-zone: "openkitchen-telegram.ru" static
 local-zone: "oplata-apple.ru" static
-local-zone: "oplata-google-play.ru" static
 local-zone: "opsecverse2-live.site" static
 local-zone: "optimusoffice.ru" static
 local-zone: "orbionoffice.ru" static
@@ -661,6 +658,7 @@ local-zone: "pago-netflix.help" static
 local-zone: "pago-sms-netflix.info" static
 local-zone: "pagos-netflix.help" static
 local-zone: "pagos-netflix.info" static
+local-zone: "paint-colors-office.sbs" static
 local-zone: "paint-delivery.de" static
 local-zone: "painter-jobs-office.today" static
 local-zone: "palm-royal-catering-and-delivery.com" static
@@ -685,8 +683,6 @@ local-zone: "pay-instagram.net" static
 local-zone: "payment-live.com" static
 local-zone: "payment-page-paypal.com" static
 local-zone: "paymentreviews-linkedin.com" static
-local-zone: "paypal-aktualisierung-de.xyz" static
-local-zone: "paypal-aktualisierungscenter.xyz" static
 local-zone: "paypal-blokkeren.com" static
 local-zone: "paypal-business-account.bar" static
 local-zone: "paypal-contact.online" static
@@ -695,7 +691,6 @@ local-zone: "paypal-kasinot.top" static
 local-zone: "paypal-kazakhstan.com" static
 local-zone: "paypal-kazakhstan.pro" static
 local-zone: "paypal-kontrollieren.cfd" static
-local-zone: "paypal-kunden-aktualisierung.xyz" static
 local-zone: "paypal-order.com" static
 local-zone: "paypal-payment-support.com" static
 local-zone: "paypal-payment-update.com" static
@@ -703,6 +698,7 @@ local-zone: "paypal-paysbas.com" static
 local-zone: "paypal-secure-page.com" static
 local-zone: "paypal-senca.top" static
 local-zone: "paypal-smith.com" static
+local-zone: "paypal-support.sbs" static
 local-zone: "paypal-support.store" static
 local-zone: "paypal-uberprufen.cfd" static
 local-zone: "paypal-verifizieren.cfd" static
@@ -718,6 +714,7 @@ local-zone: "paypall.live" static
 local-zone: "paypalnb.top" static
 local-zone: "paypalorders.xyz" static
 local-zone: "paypalsg.top" static
+local-zone: "paypalsupport.sbs" static
 local-zone: "paypalyo.xyz" static
 local-zone: "pc-apple-it-service.de" static
 local-zone: "pdf-livros-amazon-kindle.shop" static
@@ -729,6 +726,8 @@ local-zone: "peckishdelivery.co.uk" static
 local-zone: "pell-telegram.com" static
 local-zone: "pending-delivery.info" static
 local-zone: "penguin2-wordpress.site" static
+local-zone: "perfect-live.biz" static
+local-zone: "perfect-live.org" static
 local-zone: "personalgewinnung-high-office.com" static
 local-zone: "personalsuche-high-office.com" static
 local-zone: "pet-amazon.shop" static
@@ -745,7 +744,6 @@ local-zone: "pharmacy-delivery-nearme.sbs" static
 local-zone: "phdream-live.club" static
 local-zone: "phdream-live.online" static
 local-zone: "philia-office.com" static
-local-zone: "pick-delivery.com" static
 local-zone: "pickup-delivery-jobs-04006.site" static
 local-zone: "pickup-delivery-jobs-04007.site" static
 local-zone: "pinsoffice.click" static
@@ -756,7 +754,6 @@ local-zone: "pinupbonus-live.online" static
 local-zone: "pix-live-bet.net" static
 local-zone: "pix-live-beta.net" static
 local-zone: "pix-live-betbr.net" static
-local-zone: "pizza-delivery-gogo.com" static
 local-zone: "place-apple.net" static
 local-zone: "place-apple.ru" static
 local-zone: "plano-office.com" static
@@ -774,12 +771,13 @@ local-zone: "pointdasbebidasdelivery.shop" static
 local-zone: "policy-apple.com" static
 local-zone: "pom-delivery.com" static
 local-zone: "poof-its-live.com" static
-local-zone: "poostoffice.top" static
+local-zone: "pornhub-vietnam.com" static
 local-zone: "pornhub.bar" static
 local-zone: "pornhub.diy" static
 local-zone: "pornhub.food" static
 local-zone: "pornhub.forum" static
 local-zone: "pornhub.lifestyle" static
+local-zone: "pornhub.locker" static
 local-zone: "pornhub.photo" static
 local-zone: "pornhub.uno" static
 local-zone: "pornoblogger.ru" static
@@ -787,6 +785,8 @@ local-zone: "porrtal-azure.cam" static
 local-zone: "portal-microsoft-cloud-auths.icu" static
 local-zone: "portal-myaccess-apple.com" static
 local-zone: "portal-sec-officelive.com" static
+local-zone: "positivegems-delivery.com" static
+local-zone: "post-delivery-email.com" static
 local-zone: "post-delivery-uae.com" static
 local-zone: "post-delivery.com" static
 local-zone: "post-delivery.world" static
@@ -857,6 +857,7 @@ local-zone: "prime-amazon.click" static
 local-zone: "primeoffice.pro" static
 local-zone: "princo-office.ru" static
 local-zone: "printer-delivery-service.xyz" static
+local-zone: "private-office.team" static
 local-zone: "privateoffice-group.com" static
 local-zone: "pro-apple.com" static
 local-zone: "pro-apple.su" static
@@ -867,7 +868,6 @@ local-zone: "prodeliveryauto.ru" static
 local-zone: "prodentim-amazon.com" static
 local-zone: "proffice.co.uk" static
 local-zone: "proffice.xyz" static
-local-zone: "profiles-yandex.ru" static
 local-zone: "profles-yandex.ru" static
 local-zone: "proflowers-delivery.bond" static
 local-zone: "proj-office.ru" static
@@ -882,7 +882,6 @@ local-zone: "protection-telegram.com" static
 local-zone: "pruebacloudflare.shop" static
 local-zone: "psdelivery.co.uk" static
 local-zone: "psychotherapie-office.de" static
-local-zone: "ptdelivery.info" static
 local-zone: "ptt-office.space" static
 local-zone: "pully-live-festival.ch" static
 local-zone: "pully-live.ch" static
@@ -898,6 +897,7 @@ local-zone: "qatest-oyh-1134-201123-live.com" static
 local-zone: "qatest-oyh-1134-271123-live.com" static
 local-zone: "qatest-oyh-1134-271123-live.net" static
 local-zone: "qatest-oyh-1134-271123-live.org" static
+local-zone: "qatest-oyh-1134-291123-live.net" static
 local-zone: "qatest-oyh-626-311023-live.com" static
 local-zone: "qatest-oyh-626-311023-live.net" static
 local-zone: "qingpu-commercial-office-508718620.today" static
@@ -919,6 +919,7 @@ local-zone: "radio-fantasy-vor-live.de" static
 local-zone: "rafano-live.com" static
 local-zone: "rakushka-dvdelivery.ru" static
 local-zone: "ram-delivery.com" static
+local-zone: "ranzendelivery.shop" static
 local-zone: "rapid-office-solutions.co.uk" static
 local-zone: "raudner-office.com" static
 local-zone: "raybet-live.com" static
@@ -949,7 +950,6 @@ local-zone: "reddit.fun" static
 local-zone: "reddit.su" static
 local-zone: "reddit.th" static
 local-zone: "redeemgift-amazon.com" static
-local-zone: "redeliveryapp.info" static
 local-zone: "redeliverydata.info" static
 local-zone: "redeliveryde.top" static
 local-zone: "redeliverydea.top" static
@@ -1034,7 +1034,6 @@ local-zone: "rent-yandex.ru" static
 local-zone: "rental-office-666004622.click" static
 local-zone: "rental-office-937138505.click" static
 local-zone: "rental-office-koto-206373784.live" static
-local-zone: "rental-shared-offices-555726290.today" static
 local-zone: "rento-office.com" static
 local-zone: "reparation-cisco.com" static
 local-zone: "replyofficemail.sbs" static
@@ -1050,6 +1049,7 @@ local-zone: "returntooffice.xyz" static
 local-zone: "review-telegram.org" static
 local-zone: "review-your-delivery.com" static
 local-zone: "reviewofficed.click" static
+local-zone: "reviews-yandex.ru" static
 local-zone: "revise-your-delivery.com" static
 local-zone: "revolu-apple.site" static
 local-zone: "revolut-live-ire.com" static
@@ -1119,6 +1119,7 @@ local-zone: "sangyoshinshin-consulting-office.com" static
 local-zone: "santaclauspostoffice.co.uk" static
 local-zone: "sasaki-office.org" static
 local-zone: "satohiroyuki-office.com" static
+local-zone: "satta-live.live" static
 local-zone: "save-pinterest.com" static
 local-zone: "sawada-office.jp" static
 local-zone: "scheduledeliverydhlcan.info" static
@@ -1198,14 +1199,13 @@ local-zone: "sg777-live.net" static
 local-zone: "sh-cloudflare.sbs" static
 local-zone: "shanmao-live.com" static
 local-zone: "shanmaotiyu-live.com" static
-local-zone: "share-delivery.com" static
 local-zone: "share-google.cloud" static
+local-zone: "share-live-location.com" static
 local-zone: "share-offices.com" static
 local-zone: "shared-delivery.com" static
 local-zone: "shared-office-33661.bond" static
 local-zone: "shared-office-72115.bond" static
 local-zone: "shared-office-7547140.zone" static
-local-zone: "shared-office-rental-781765637.today" static
 local-zone: "shared-office365.com" static
 local-zone: "sharedoffice.xyz" static
 local-zone: "sharedoffice039536.icu" static
@@ -1245,7 +1245,6 @@ local-zone: "shut-telegram.ru" static
 local-zone: "sigma-remoffice-msk.ru" static
 local-zone: "sigma-remoffice-spb.ru" static
 local-zone: "sign-in-with-apple.com" static
-local-zone: "sign-office.net" static
 local-zone: "signin-microsoft.online" static
 local-zone: "signin-support-apple.com" static
 local-zone: "silvercrestdeliverysolutions.info" static
@@ -1261,7 +1260,6 @@ local-zone: "sistema-para-pedidos-delivery.online" static
 local-zone: "site-microsoft.com" static
 local-zone: "site-netflix.help" static
 local-zone: "sites-google.site" static
-local-zone: "skdoffice.co.uk" static
 local-zone: "skedit-whatsapp.com" static
 local-zone: "sky-delivery.ru" static
 local-zone: "sky247-live.com" static
@@ -1287,6 +1285,7 @@ local-zone: "smile-office-1726696.live" static
 local-zone: "smile-office.net" static
 local-zone: "smirnoffice.pro" static
 local-zone: "smooth-live.link" static
+local-zone: "sms-netflix.help" static
 local-zone: "sms-paypal-blokkeren.com" static
 local-zone: "sms-paypal-compte.com" static
 local-zone: "sms-paypal-dringend.com" static
@@ -1295,8 +1294,6 @@ local-zone: "sms-paypal-nl.com" static
 local-zone: "sms-paypal-paysbas.com" static
 local-zone: "sms-paypal-suspendido.com" static
 local-zone: "sms-paypal-sverige.com" static
-local-zone: "smsdelivery.click" static
-local-zone: "snap-live.com" static
 local-zone: "so-telegram.com" static
 local-zone: "softoffice.app" static
 local-zone: "software-engineering-optimization-live-today-intl.live" static
@@ -1309,9 +1306,11 @@ local-zone: "soporte-america-apple.com" static
 local-zone: "soportela-apple.com" static
 local-zone: "sos-delivery.com" static
 local-zone: "sos-netflix.help" static
+local-zone: "soundproof-office-789751728.click" static
 local-zone: "sp-live.net" static
 local-zone: "spacebox-office-space.com" static
 local-zone: "spaghetti-delivery.com" static
+local-zone: "spain-live.com" static
 local-zone: "spain-netflix.help" static
 local-zone: "spambot-telegram.icu" static
 local-zone: "sparkassen-live.xyz" static
@@ -1363,6 +1362,7 @@ local-zone: "suppor-apple.com" static
 local-zone: "support--apple.com" static
 local-zone: "support-facebook-accountt-1.click" static
 local-zone: "support-facebook-accountt-2.click" static
+local-zone: "support-login-live.com" static
 local-zone: "support-netflix.help" static
 local-zone: "support-paiment-netflix.com" static
 local-zone: "supportacces-apple.com" static
@@ -1382,6 +1382,7 @@ local-zone: "sustainable-amazon.com" static
 local-zone: "suzhou-apple.com" static
 local-zone: "swiftexpressdeliveryservices.info" static
 local-zone: "swiftofficeservices.uk" static
+local-zone: "swiftofficesupplies.co.uk" static
 local-zone: "syn-cisco.com" static
 local-zone: "syncbackoffice.xyz" static
 local-zone: "syria--live.online" static
@@ -1428,6 +1429,7 @@ local-zone: "telegram-49990.com" static
 local-zone: "telegram-ab.com" static
 local-zone: "telegram-accessible.online" static
 local-zone: "telegram-accessible.ru" static
+local-zone: "telegram-acu.com" static
 local-zone: "telegram-ae.icu" static
 local-zone: "telegram-am.info" static
 local-zone: "telegram-am.top" static
@@ -1440,7 +1442,6 @@ local-zone: "telegram-assi.com" static
 local-zone: "telegram-au.top" static
 local-zone: "telegram-auc.top" static
 local-zone: "telegram-aud.top" static
-local-zone: "telegram-auth-service.com" static
 local-zone: "telegram-auth-service.net" static
 local-zone: "telegram-auth.info" static
 local-zone: "telegram-auth.lol" static
@@ -1481,7 +1482,6 @@ local-zone: "telegram-cb.org" static
 local-zone: "telegram-cf.org" static
 local-zone: "telegram-cg.org" static
 local-zone: "telegram-ch.org" static
-local-zone: "telegram-channels-rating.info" static
 local-zone: "telegram-ci.org" static
 local-zone: "telegram-cj.org" static
 local-zone: "telegram-cl.org" static
@@ -1530,6 +1530,7 @@ local-zone: "telegram-eb.org" static
 local-zone: "telegram-ec.org" static
 local-zone: "telegram-ed.org" static
 local-zone: "telegram-ee.org" static
+local-zone: "telegram-en.org" static
 local-zone: "telegram-eog.ru" static
 local-zone: "telegram-ex.org" static
 local-zone: "telegram-fi.com" static
@@ -1538,6 +1539,7 @@ local-zone: "telegram-field.ru" static
 local-zone: "telegram-find.org" static
 local-zone: "telegram-frespin.fun" static
 local-zone: "telegram-game.com" static
+local-zone: "telegram-gift.ru" static
 local-zone: "telegram-glft.ru" static
 local-zone: "telegram-gm.com" static
 local-zone: "telegram-group.site" static
@@ -1557,10 +1559,6 @@ local-zone: "telegram-jg.top" static
 local-zone: "telegram-jmp.com" static
 local-zone: "telegram-ke.com" static
 local-zone: "telegram-km.com" static
-local-zone: "telegram-krol.org" static
-local-zone: "telegram-krom.org" static
-local-zone: "telegram-kron.org" static
-local-zone: "telegram-kroo.org" static
 local-zone: "telegram-krop.org" static
 local-zone: "telegram-ks.com" static
 local-zone: "telegram-kz.com" static
@@ -1586,6 +1584,8 @@ local-zone: "telegram-notice.online" static
 local-zone: "telegram-notice.ru" static
 local-zone: "telegram-oi.com" static
 local-zone: "telegram-oling.com" static
+local-zone: "telegram-org.net" static
+local-zone: "telegram-outh.lol" static
 local-zone: "telegram-padangtoto.live" static
 local-zone: "telegram-party.ru" static
 local-zone: "telegram-pbotpremium.com" static
@@ -1626,18 +1626,18 @@ local-zone: "telegram-sec.com" static
 local-zone: "telegram-secure.com" static
 local-zone: "telegram-secure.online" static
 local-zone: "telegram-secure.ru" static
-local-zone: "telegram-service.com" static
 local-zone: "telegram-session.online" static
 local-zone: "telegram-session.ru" static
 local-zone: "telegram-shielding.online" static
 local-zone: "telegram-shielding.ru" static
 local-zone: "telegram-sp.org" static
 local-zone: "telegram-sp.top" static
-local-zone: "telegram-suport.info" static
-local-zone: "telegram-suport.ru" static
+local-zone: "telegram-spc.top" static
+local-zone: "telegram-spd.top" static
 local-zone: "telegram-support.click" static
 local-zone: "telegram-supporter.ru" static
 local-zone: "telegram-sy.org" static
+local-zone: "telegram-tb.com" static
 local-zone: "telegram-thk.top" static
 local-zone: "telegram-tkh.top" static
 local-zone: "telegram-tm.com" static
@@ -1666,7 +1666,6 @@ local-zone: "telegram-web-bot.lol" static
 local-zone: "telegram-web-support.ru" static
 local-zone: "telegram-web.com" static
 local-zone: "telegram-web.cyou" static
-local-zone: "telegram-web.icu" static
 local-zone: "telegram-webb.sbs" static
 local-zone: "telegram-webe.cfd" static
 local-zone: "telegram-webe.cyou" static
@@ -1679,8 +1678,11 @@ local-zone: "telegram-webv.cfd" static
 local-zone: "telegram-webv.sbs" static
 local-zone: "telegram-wk.com" static
 local-zone: "telegram-work.ru" static
+local-zone: "telegram-xl.org" static
 local-zone: "telegram-xw.org" static
 local-zone: "telegram-xy.org" static
+local-zone: "telegram-yc.com" static
+local-zone: "telegram-zer.com" static
 local-zone: "telegram-zh.cloud" static
 local-zone: "telegram-zi.com" static
 local-zone: "telegram-zx.com" static
@@ -1694,12 +1696,10 @@ local-zone: "telegram.golf" static
 local-zone: "telegram.ninja" static
 local-zone: "telegram.now" static
 local-zone: "telegram.tattoo" static
-local-zone: "telegramm-ads.info" static
 local-zone: "telegraph-house.com" static
 local-zone: "telegraph-note.com" static
 local-zone: "telegraph.ug" static
-local-zone: "telif-instagram.com" static
-local-zone: "temporary-office-rent-674786610.live" static
+local-zone: "temi-wordpress.net" static
 local-zone: "temporary-office-rent-776792649.zone" static
 local-zone: "terrace-office.com" static
 local-zone: "tesla-live.org" static
@@ -1708,6 +1708,7 @@ local-zone: "test-ca-live.com" static
 local-zone: "test-cloudflare.site" static
 local-zone: "test-live-de-1221351.com" static
 local-zone: "test-live-de-1221351.store" static
+local-zone: "test-live-uk-2121357.co.uk" static
 local-zone: "test-live-uk-2121357.com" static
 local-zone: "test-live-uk-2121357.info" static
 local-zone: "test-live-us-1111938-regress.info" static
@@ -1740,7 +1741,6 @@ local-zone: "the-office.cfd" static
 local-zone: "the-passion-blogger.com" static
 local-zone: "thebloggerguru.xyz" static
 local-zone: "theboxoffice.xyz" static
-local-zone: "theelleoffice.info" static
 local-zone: "thefourmioffice.xyz" static
 local-zone: "theglutenfreeblogger.shop" static
 local-zone: "thehighoffice.uk" static
@@ -1775,11 +1775,11 @@ local-zone: "tiktok-18plus.pro" static
 local-zone: "tiktok-3.com" static
 local-zone: "tiktok-5.com" static
 local-zone: "tiktok-888.vip" static
+local-zone: "tiktok-accelerator.com" static
 local-zone: "tiktok-affiliate.com" static
 local-zone: "tiktok-affiliate.shop" static
 local-zone: "tiktok-agentur.com" static
 local-zone: "tiktok-alees.com" static
-local-zone: "tiktok-asian.com" static
 local-zone: "tiktok-b.com" static
 local-zone: "tiktok-beta.net" static
 local-zone: "tiktok-betaa.net" static
@@ -1789,6 +1789,7 @@ local-zone: "tiktok-c.com" static
 local-zone: "tiktok-c2c.com" static
 local-zone: "tiktok-correct.com" static
 local-zone: "tiktok-correct.shop" static
+local-zone: "tiktok-cross.com" static
 local-zone: "tiktok-cusde.com" static
 local-zone: "tiktok-cvqps.com" static
 local-zone: "tiktok-d.com" static
@@ -1847,7 +1848,6 @@ local-zone: "tiktok-mails.cyou" static
 local-zone: "tiktok-mails.icu" static
 local-zone: "tiktok-mails.lat" static
 local-zone: "tiktok-mails.xyz" static
-local-zone: "tiktok-mall001.com" static
 local-zone: "tiktok-mallshop.net" static
 local-zone: "tiktok-market.top" static
 local-zone: "tiktok-market.vip" static
@@ -1873,7 +1873,6 @@ local-zone: "tiktok-price.com" static
 local-zone: "tiktok-probe.com" static
 local-zone: "tiktok-revamp.shop" static
 local-zone: "tiktok-robot.com" static
-local-zone: "tiktok-robot.icu" static
 local-zone: "tiktok-rss.com" static
 local-zone: "tiktok-scop.com" static
 local-zone: "tiktok-seller.shop" static
@@ -1889,6 +1888,7 @@ local-zone: "tiktok-shopadmin.com" static
 local-zone: "tiktok-shopadmin.net" static
 local-zone: "tiktok-shopapp.vip" static
 local-zone: "tiktok-shopee.com" static
+local-zone: "tiktok-shopify.com" static
 local-zone: "tiktok-shopping.shop" static
 local-zone: "tiktok-shopt.vip" static
 local-zone: "tiktok-shopwebsite.com" static
@@ -1917,6 +1917,7 @@ local-zone: "tiktok-vn-khuyenmai-17836.online" static
 local-zone: "tiktok-vn-khuyenmai-18293.online" static
 local-zone: "tiktok-vn-khuyenmai-18542.online" static
 local-zone: "tiktok-vn24167232.online" static
+local-zone: "tiktok-watch.com" static
 local-zone: "tiktok-wholesalee.xyz" static
 local-zone: "tiktok-yudeq.com" static
 local-zone: "tiktok-z.com" static
@@ -1924,8 +1925,12 @@ local-zone: "tiktok.beauty" static
 local-zone: "tiktok.deal" static
 local-zone: "tiktok.forum" static
 local-zone: "tiktok.game" static
+local-zone: "tiktok.giving" static
+local-zone: "tiktok.motorcycles" static
 local-zone: "tiktok.pt" static
 local-zone: "tiktok.quest" static
+local-zone: "tiktok.realty" static
+local-zone: "tiktok.rent" static
 local-zone: "tiktok.xn" static
 local-zone: "tiktokoffice.top" static
 local-zone: "tiktokshop-official.shop" static
@@ -1943,6 +1948,7 @@ local-zone: "tmdelivery.co.uk" static
 local-zone: "to-live-is-to-evolve.co.uk" static
 local-zone: "tobacco-deliveryman-jp-5294012.world" static
 local-zone: "toc-telegram.com" static
+local-zone: "tocado-office-fruit.com" static
 local-zone: "todaysoffice.info" static
 local-zone: "toji-office.com" static
 local-zone: "tokushima-office-create.com" static
@@ -1957,12 +1963,14 @@ local-zone: "top-apps-telegram.ru" static
 local-zone: "top-blogger.com" static
 local-zone: "top-modern-office-2701-ae.click" static
 local-zone: "top-modern-office.click" static
+local-zone: "top-office-rent-id.click" static
 local-zone: "top-office-rent-id.fun" static
 local-zone: "top-office-rent-id.online" static
 local-zone: "top-office-rent-id.website" static
 local-zone: "top-officerent-id.click" static
 local-zone: "top-products-on-amazon.com" static
 local-zone: "top-telegram.ru" static
+local-zone: "top5-grocery-delivery.com" static
 local-zone: "topblogger.top" static
 local-zone: "topdelivery.click" static
 local-zone: "topoffice-rent-id.click" static
@@ -1991,6 +1999,7 @@ local-zone: "tropical-live.com" static
 local-zone: "true-born-live.com" static
 local-zone: "trust-office.ru" static
 local-zone: "trustforte-google.com" static
+local-zone: "trustwallets-live.help" static
 local-zone: "try-officereview.com" static
 local-zone: "try-web-office.click" static
 local-zone: "tryofficesupermarket.info" static
@@ -2047,10 +2056,10 @@ local-zone: "uk-google-seo.co.uk" static
 local-zone: "uk-live-co.site" static
 local-zone: "uk-live.online" static
 local-zone: "ukdelivery.date" static
-local-zone: "ukl-facebook.click" static
 local-zone: "ukpieandmashdelivery.co.uk" static
 local-zone: "ulli-live.de" static
 local-zone: "umwelt-office.com" static
+local-zone: "uncommonsense-live.com" static
 local-zone: "unify-live.online" static
 local-zone: "unique-gaming-and-office-chairs.store" static
 local-zone: "uniswapp-live.com" static
@@ -2079,6 +2088,7 @@ local-zone: "usa-apple-info.click" static
 local-zone: "usa-tiktok-shop.com" static
 local-zone: "usahatoto-zoom.sbs" static
 local-zone: "usalocations-apple.com" static
+local-zone: "usatoday-news.com" static
 local-zone: "used-officefurniture-hub.click" static
 local-zone: "used-officefurniturehub.click" static
 local-zone: "usedoffice-furniture-hub.click" static
@@ -2112,6 +2122,7 @@ local-zone: "vanguard-microsoft.com" static
 local-zone: "vba-office.be" static
 local-zone: "vehicle-delivery.com" static
 local-zone: "velocitybackoffice.co.uk" static
+local-zone: "verify-whatsapp.ru" static
 local-zone: "verify-yandex.online" static
 local-zone: "verify-yandex.ru" static
 local-zone: "verifycation-discord.ru" static
@@ -2180,6 +2191,8 @@ local-zone: "virtual-office-space-jp.click" static
 local-zone: "virtual-office-space-jpn.click" static
 local-zone: "virtual-office-space.click" static
 local-zone: "virtual-office-space08.click" static
+local-zone: "virtual-office-tatuape-105204280.today" static
+local-zone: "virtual-office-tatuape-648443403.today" static
 local-zone: "virtual-office-tatuape-902461081.today" static
 local-zone: "virtual-office-tatuape-980457847.today" static
 local-zone: "virtual-office.today" static
@@ -2201,12 +2214,10 @@ local-zone: "vm-tiktok.org" static
 local-zone: "vn88go-live.name" static
 local-zone: "vn88ok-live.name" static
 local-zone: "vodkacasino-live.top" static
-local-zone: "voltbackofficesolutions.co.uk" static
 local-zone: "vortex-live.com" static
 local-zone: "vox-live.com" static
 local-zone: "voxoffice.app" static
 local-zone: "voxoffice.co.uk" static
-local-zone: "vpiski-telegram.site" static
 local-zone: "vridol-live.de" static
 local-zone: "vs-linkedin.com" static
 local-zone: "vs-office.ch" static
@@ -2215,7 +2226,6 @@ local-zone: "vv-telegram.com" static
 local-zone: "vv-telegram.org" static
 local-zone: "vvv-telegram.com" static
 local-zone: "vvvvw-telegram.org" static
-local-zone: "vvvwv-telegram.org" static
 local-zone: "vvwvv-telegram.org" static
 local-zone: "vvwvw-telegram.org" static
 local-zone: "vvwwvw-telegram.org" static
@@ -2225,7 +2235,6 @@ local-zone: "vwvv-telegram.org" static
 local-zone: "vwvwvv-telegram.org" static
 local-zone: "vwvww-telegram.org" static
 local-zone: "vwwvw-telegram.org" static
-local-zone: "w-e-live.com" static
 local-zone: "wa-whatsapp.xyz" static
 local-zone: "wac-telegram-a.org" static
 local-zone: "wad-telegram-l.org" static
@@ -2278,6 +2287,8 @@ local-zone: "webex-cloud.com" static
 local-zone: "webex-com.fun" static
 local-zone: "webex-com.store" static
 local-zone: "webex-meet.ink" static
+local-zone: "webex-uzcard.org" static
+local-zone: "webex.cam" static
 local-zone: "webex.chat" static
 local-zone: "webex.sh.cn" static
 local-zone: "webexclusiveoffers.shop" static
@@ -2354,10 +2365,8 @@ local-zone: "whatsapp-betabr.net" static
 local-zone: "whatsapp-bna.com" static
 local-zone: "whatsapp-book.com" static
 local-zone: "whatsapp-boost.com" static
-local-zone: "whatsapp-box.com" static
 local-zone: "whatsapp-broski.online" static
 local-zone: "whatsapp-business.top" static
-local-zone: "whatsapp-calling.xyz" static
 local-zone: "whatsapp-cards.click" static
 local-zone: "whatsapp-career-network.com" static
 local-zone: "whatsapp-career.com" static
@@ -2390,8 +2399,8 @@ local-zone: "whatsapp-fs.com" static
 local-zone: "whatsapp-gateway.com" static
 local-zone: "whatsapp-gr.com" static
 local-zone: "whatsapp-guide.com" static
+local-zone: "whatsapp-gxq.com" static
 local-zone: "whatsapp-help.top" static
-local-zone: "whatsapp-hko.vip" static
 local-zone: "whatsapp-hqx.com" static
 local-zone: "whatsapp-hu.com" static
 local-zone: "whatsapp-ik.com" static
@@ -2472,16 +2481,18 @@ local-zone: "whatsapp-xma.com" static
 local-zone: "whatsapp-xou.com" static
 local-zone: "whatsapp-zc.com" static
 local-zone: "whatsapp-ze.com" static
+local-zone: "whatsapp-zu.top" static
 local-zone: "whatsapp.locker" static
 local-zone: "whatsapp.tips" static
-local-zone: "whatsapp.xin" static
 local-zone: "whattsapp-live.cyou" static
 local-zone: "whattsapp-live.top" static
 local-zone: "wheretostartasablogger.fun" static
 local-zone: "wi-live.com" static
 local-zone: "wicked-live.com" static
 local-zone: "wikipedia.observer" static
+local-zone: "wikipedia.space" static
 local-zone: "wildberries-live.shop" static
+local-zone: "wilhelm-office.com" static
 local-zone: "williams-courier-delivery-service-limited.com" static
 local-zone: "winbox-live.my" static
 local-zone: "windows12-office-antivirus-software-enterhardware-com.click" static
@@ -2511,6 +2522,7 @@ local-zone: "wkc-telegram-s.org" static
 local-zone: "wkc-telegram-t.org" static
 local-zone: "wkc-telegram-u.org" static
 local-zone: "wmw-whatsapp.com" static
+local-zone: "wnb-telegram-q.org" static
 local-zone: "wnk-telegram-a.org" static
 local-zone: "wnk-telegram-b.org" static
 local-zone: "wnk-telegram-c.org" static
@@ -2589,15 +2601,9 @@ local-zone: "world-reddit.pro" static
 local-zone: "worldlogisticdeliveryservice.live" static
 local-zone: "worldwiinfotravelbloggerassociation.info" static
 local-zone: "wp-fix-live-web-u2w-20241120.com" static
-local-zone: "wpk-telegram-a.org" static
-local-zone: "wpk-telegram-b.org" static
-local-zone: "wpk-telegram-c.org" static
 local-zone: "wpk-telegram-l.org" static
-local-zone: "wpk-telegram-m.org" static
 local-zone: "wpk-telegram-n.org" static
 local-zone: "wpk-telegram-o.org" static
-local-zone: "wpk-telegram-v.org" static
-local-zone: "wpk-telegram-x.org" static
 local-zone: "wpk-telegram-y.org" static
 local-zone: "wps-offices.cyou" static
 local-zone: "wps-offices.icu" static
@@ -2644,6 +2650,7 @@ local-zone: "xe-telegram.com" static
 local-zone: "xeax-telegram.com" static
 local-zone: "xfy-telegram.com" static
 local-zone: "xi-telegram.com" static
+local-zone: "xiangdelivery.top" static
 local-zone: "xiaojiuzhibo-live.com" static
 local-zone: "xingkongtiyu-live.com" static
 local-zone: "xiongmaosport-live.com" static
@@ -2702,7 +2709,6 @@ local-zone: "yahoo-e-commerce.pro" static
 local-zone: "yahoo-e-commerce.shopping" static
 local-zone: "yahoo-live.com" static
 local-zone: "yahoo-next.com" static
-local-zone: "yakugaku-blogger.com" static
 local-zone: "yalla--live.tech" static
 local-zone: "yalla-live-tv.live" static
 local-zone: "yalla-live.art" static
@@ -2722,19 +2728,17 @@ local-zone: "yandex-composer.online" static
 local-zone: "yandex-composer.ru" static
 local-zone: "yandex-delivery84129.ru" static
 local-zone: "yandex-directolog.ru" static
-local-zone: "yandex-direkt.online" static
 local-zone: "yandex-dostavka-work.online" static
 local-zone: "yandex-dostavka-work.ru" static
 local-zone: "yandex-dostavka.kz" static
 local-zone: "yandex-dostavka.ru" static
 local-zone: "yandex-dota.ru" static
+local-zone: "yandex-eda-kurier.ru" static
 local-zone: "yandex-eda.online" static
-local-zone: "yandex-elena.ru" static
 local-zone: "yandex-fabrica.ru" static
 local-zone: "yandex-food.online" static
 local-zone: "yandex-go.pro" static
 local-zone: "yandex-ivanova-work.ru" static
-local-zone: "yandex-kost.ru" static
 local-zone: "yandex-kyryer.ru" static
 local-zone: "yandex-mails.ru" static
 local-zone: "yandex-mb.ru" static
@@ -2752,7 +2756,6 @@ local-zone: "yandex-rs.ru" static
 local-zone: "yandex-scherbakov.ru" static
 local-zone: "yandex-seotop.ru" static
 local-zone: "yandex-team-68488314257-7.ru" static
-local-zone: "yandex-tube.ru" static
 local-zone: "yandex-uspenskij.ru" static
 local-zone: "yandex.bar" static
 local-zone: "yandex.download" static
@@ -2789,7 +2792,6 @@ local-zone: "youtube-monetization-services.today" static
 local-zone: "youtube-ok.online" static
 local-zone: "youtube-pesquisas.online" static
 local-zone: "youtube-podcast.ru" static
-local-zone: "youtube-premio.online" static
 local-zone: "youtube-premium.com" static
 local-zone: "youtube-shinvest.com" static
 local-zone: "youtube-soket5.com" static
@@ -2812,6 +2814,8 @@ local-zone: "yuka-office.net" static
 local-zone: "yurticikargooffices.cfd" static
 local-zone: "yuya-zoom-se.com" static
 local-zone: "yuya-zoom-se.info" static
+local-zone: "yy-live.com" static
+local-zone: "yy-live.net" static
 local-zone: "yy-live.top" static
 local-zone: "yy-live.vip" static
 local-zone: "yy-live.xyz" static
@@ -2819,6 +2823,7 @@ local-zone: "zaem-live.ru" static
 local-zone: "zapostoffice-co.top" static
 local-zone: "zapret-github.ru" static
 local-zone: "zdeliveryblackfriday.shop" static
+local-zone: "ze-delivery.com" static
 local-zone: "ze-delivery.food" static
 local-zone: "ze-delivery.pro" static
 local-zone: "zee-zoom.com" static
@@ -2828,6 +2833,7 @@ local-zone: "zg-bing.com" static
 local-zone: "zg-google.com" static
 local-zone: "zgraphics-live.com" static
 local-zone: "zh-cn-telegram.org" static
+local-zone: "zh-google-chrome.com" static
 local-zone: "zh-google.cn" static
 local-zone: "zhao-bing.top" static
 local-zone: "zhenruoffice.cn" static
@@ -2835,6 +2841,7 @@ local-zone: "zhj-live.com" static
 local-zone: "zijsveposlani-live.cz" static
 local-zone: "ziptv-youtube.com" static
 local-zone: "zlodeyka-7-live-animego.ru" static
+local-zone: "zlodeyka-7-live-jutsu.ru" static
 local-zone: "zoo-zoom.com" static
 local-zone: "zoobloggers.ru" static
 local-zone: "zoom-a-vet.com" static
@@ -2848,13 +2855,16 @@ local-zone: "zoom-drive.com" static
 local-zone: "zoom-fokus.com" static
 local-zone: "zoom-gate.site" static
 local-zone: "zoom-hire.com" static
+local-zone: "zoom-holdings.com" static
 local-zone: "zoom-hpp.agency" static
 local-zone: "zoom-i.com" static
 local-zone: "zoom-ies.com" static
 local-zone: "zoom-immobilier.com" static
 local-zone: "zoom-link.one" static
+local-zone: "zoom-meetings.xyz" static
 local-zone: "zoom-n.com" static
 local-zone: "zoom-net.net" static
+local-zone: "zoom-odindev.com" static
 local-zone: "zoom-oregon.com" static
 local-zone: "zoom-profit.com" static
 local-zone: "zoom-score.online" static
@@ -2870,5 +2880,7 @@ local-zone: "zoom.finance" static
 local-zone: "zoom.locker" static
 local-zone: "zoom.rocks" static
 local-zone: "zoom.wine" static
+local-zone: "zooma-casino-stop.ru" static
+local-zone: "zooma-casinos-stop.ru" static
 local-zone: "zoomify-mail.ru" static
 local-zone: "zy-telegram.com" static
