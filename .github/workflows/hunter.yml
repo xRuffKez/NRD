@@ -65,6 +65,7 @@ jobs:
           mv output/nrd-phishing-30day_unbound_part3.txt lists/30-day_phishing/unbound
           mv output/nrd-phishing-14day_wildcard.txt lists/14-day_phishing/wildcard
           mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard
+          cat etags.json
 
       - name: Commit and push changes
         run: |
