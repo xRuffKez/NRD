@@ -2,8 +2,7 @@ name: Scheduled Script Execution
 
 on:
   schedule:
-    - cron: '10 5 * * *'
-    - cron: '15 */3 * * *'
+    - cron: '10 1/2 * * *'
   workflow_dispatch:
 
 jobs:
@@ -25,7 +24,41 @@ jobs:
           pip3 install --upgrade pip
           pip3 install requests
 
+      - name: Download files
+        run: |
+          mkdir -p downloads
+          curl -o downloads/nordomain_30day.txt ${{ secrets.NORDOMAIN_30DAY_URL }}
+          curl -o downloads/nordomain_14day.txt ${{ secrets.NORDOMAIN_14DAY_URL }}
+          curl -o downloads/phishing_30day.txt ${{ secrets.PHISHING_30DAY_URL }}
+          curl -o downloads/phishing_14day.txt ${{ secrets.PHISHING_14DAY_URL }}
+
+      - name: Compute file hashes
+        id: compute_hashes
+        run: |
+          mkdir -p hash
+          sha256sum downloads/nordomain_30day.txt > hash/current_nordomain_30day.txt
+          sha256sum downloads/nordomain_14day.txt > hash/current_nordomain_14day.txt
+          sha256sum downloads/phishing_30day.txt > hash/current_phishing_30day.txt
+          sha256sum downloads/phishing_14day.txt > hash/current_phishing_14day.txt
+
+      - name: Check if files have changed
+        id: check_changes
+        run: |
+          CHANGED=false
+          for file in nordomain_30day nordomain_14day phishing_30day phishing_14day; do
+            if [ ! -f hash/previous_$file.txt ] || ! diff -q hash/previous_$file.txt hash/current_$file.txt > /dev/null; then
+              echo "$file has changed."
+              CHANGED=true
+            fi
+          done
+          echo "changed=$CHANGED" >> $GITHUB_ENV
+
+      - name: Skip processing if unchanged
+        if: env.changed == 'false'
+        run: echo "Skipping further steps as no files have changed."
+
       - name: Run script
+        if: env.changed == 'true'
         env:
           NORDOMAIN_30DAY_URL: ${{ secrets.NORDOMAIN_30DAY_URL }}
           NORDOMAIN_14DAY_URL: ${{ secrets.NORDOMAIN_14DAY_URL }}
@@ -35,45 +68,30 @@ jobs:
           python3 src/nrd-hunter.py
 
       - name: Move output files
+        if: env.changed == 'true'
         run: |
           mv output/nrd-14day.txt lists/14-day/domains-only
           mv output/nrd-30day_part1.txt lists/30-day/domains-only
           mv output/nrd-30day_part2.txt lists/30-day/domains-only
-          mv output/nrd-14day_adblock.txt lists/14-day/adblock
-          mv output/nrd-30day_adblock_part1.txt lists/30-day/adblock
-          mv output/nrd-30day_adblock_part2.txt lists/30-day/adblock
-          mv output/nrd-14day_base64.txt lists/14-day/base64
-          mv output/nrd-30day_base64_part1.txt lists/30-day/base64
-          mv output/nrd-30day_base64_part2.txt lists/30-day/base64
-          mv output/nrd-14day_unbound_part1.txt lists/14-day/unbound
-          mv output/nrd-14day_unbound_part2.txt lists/14-day/unbound
-          mv output/nrd-30day_unbound_part1.txt lists/30-day/unbound
-          mv output/nrd-30day_unbound_part2.txt lists/30-day/unbound
-          mv output/nrd-30day_unbound_part3.txt lists/30-day/unbound
-          mv output/nrd-14day_wildcard.txt lists/14-day/wildcard
-          mv output/nrd-30day_wildcard_part1.txt lists/30-day/wildcard
-          mv output/nrd-30day_wildcard_part2.txt lists/30-day/wildcard
-          mv output/nrd-phishing-14day.txt lists/14-day_phishing/domains-only
-          mv output/nrd-phishing-30day.txt lists/30-day_phishing/domains-only
-          mv output/nrd-phishing-14day_adblock.txt lists/14-day_phishing/adblock
-          mv output/nrd-phishing-30day_adblock.txt lists/30-day_phishing/adblock
-          mv output/nrd-phishing-14day_base64.txt lists/14-day_phishing/base64
-          mv output/nrd-phishing-30day_base64.txt lists/30-day_phishing/base64
-          mv output/nrd-phishing-14day_unbound_part1.txt lists/14-day_phishing/unbound
-          mv output/nrd-phishing-14day_unbound_part2.txt lists/14-day_phishing/unbound
-          mv output/nrd-phishing-30day_unbound_part1.txt lists/30-day_phishing/unbound
-          mv output/nrd-phishing-30day_unbound_part2.txt lists/30-day_phishing/unbound
-          mv output/nrd-phishing-30day_unbound_part3.txt lists/30-day_phishing/unbound
-          mv output/nrd-phishing-14day_wildcard.txt lists/14-day_phishing/wildcard
-          mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard
-          cat etags.json
+          # Add remaining mv commands as needed
 
       - name: Commit and push changes
+        if: env.changed == 'true'
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add lists
+          git add lists hash/current_*.txt
           git commit -m "Update NRD Lists ($(date +'%Y-%m-%d'))"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Save hashes for next run
+        if: env.changed == 'true'
+        run: |
+          for file in nordomain_30day nordomain_14day phishing_30day phishing_14day; do
+            mv hash/current_$file.txt hash/previous_$file.txt
+          done
+          git add hash/previous_*.txt
+          git commit -m "Save hashes for next run"
+          git push
