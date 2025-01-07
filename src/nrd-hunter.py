@@ -11,7 +11,6 @@ import logging
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 
-
 def download_file_if_etag_changed(url, dest, etag_file):
     logging.info(f"Checking URL: {url}")
     response = requests.head(url)
@@ -66,120 +65,85 @@ def write_header(outfile, description, num_entries=0):
     outfile.write(f"# {description}\n# Author: xRuffKez\n# Time of Compilation: {now}\n# Number of entries: {num_entries}\n#\n")
 
 
-def decode_file(input_file, output_file, adblock_output_file, wildcard_output_file, unbound_output_file, base64_output_file, description):
+def write_output_files(domains, output_dir, description):
+    formats = {
+        "domains-only": lambda domain: domain,
+        "adblock": lambda domain: f"||{domain}^",
+        "wildcard": lambda domain: f"*.{domain}",
+        "unbound": lambda domain: f'local-zone: "{domain}" static',
+        "base64": lambda domain: encode_base64(domain)
+    }
+
+    for fmt, transform in formats.items():
+        filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
+        with open(filename, 'w', encoding='utf-8') as f:
+            write_header(f, f"{description} ({fmt})", len(domains))
+            for domain in sorted(domains):
+                f.write(f"{transform(domain)}\n")
+
+
+def decode_file(input_file, output_dir, description):
     try:
         with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
             domains = set()
             for line in infile:
                 decoded_str = decode_base64(line.strip())
                 domains.update(extract_domains(decoded_str))
-        num_entries = len(domains)
-        with open(output_file, 'w', encoding='utf-8') as outfile, \
-             open(adblock_output_file, 'w', encoding='utf-8') as adblock_outfile, \
-             open(wildcard_output_file, 'w', encoding='utf-8') as wildcard_outfile, \
-             open(unbound_output_file, 'w', encoding='utf-8') as unbound_outfile, \
-             open(base64_output_file, 'w', encoding='utf-8') as base64_outfile:
-            write_header(outfile, description, num_entries)
-            write_header(adblock_outfile, f"{description} (Adblock format)", num_entries)
-            write_header(wildcard_outfile, f"{description} (Wildcard format)", num_entries)
-            write_header(unbound_outfile, f"{description} (Unbound format)", num_entries)
-            write_header(base64_outfile, f"{description} (Base64 format)", num_entries)
-            for domain in sorted(domains):
-                outfile.write(f"{domain}\n")
-                adblock_outfile.write(f"||{domain}^\n")
-                wildcard_outfile.write(f"*.{domain}\n")
-                unbound_outfile.write(f'local-zone: "{domain}" static\n')
-                base64_outfile.write(f"{encode_base64(domain)}\n")
+
+        write_output_files(domains, output_dir, description)
+        return domains
     except Exception as e:
         logging.error(f"Error decoding file {input_file}: {e}")
+        return set()
 
 
-def split_file(input_file):
+def split_file(input_file, num_parts=3):
     try:
         with open(input_file, 'r', encoding='utf-8') as infile:
             lines = infile.readlines()
-        third = len(lines) // 3
-        base_name = os.path.splitext(input_file)[0]
-        parts = [f"{base_name}_part{i+1}.txt" for i in range(3)]
-        for i, part in enumerate(parts):
-            with open(part, 'w', encoding='utf-8') as outfile:
-                outfile.writelines(lines[i * third:(i + 1) * third])
-        logging.info(f"File {input_file} split into: {parts}")
-        return parts
+        num_lines = len(lines)
+        chunk_size = (num_lines + num_parts - 1) // num_parts  # Split evenly
+
+        base_name, ext = os.path.splitext(input_file)
+        split_files = []
+        for i in range(num_parts):
+            part_file = f"{base_name}_part{i + 1}{ext}"
+            with open(part_file, 'w', encoding='utf-8') as outfile:
+                outfile.writelines(lines[i * chunk_size:(i + 1) * chunk_size])
+            split_files.append(part_file)
+        return split_files
     except Exception as e:
         logging.error(f"Error splitting file {input_file}: {e}")
         return []
 
 
-def fetch_additional_source(url, user_agent, dest_file):
-    headers = {"User-Agent": user_agent}
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        with open(dest_file, 'w', encoding='utf-8') as f:
-            f.write(response.text)
-        return dest_file
-    logging.error(f"Failed to fetch additional source from {url}: {response.status_code}")
-    return None
-
-
 def process_files_with_additional_source():
     urls = [
-        {"url": os.getenv('NORDOMAIN_30DAY_URL'), "description": "30-day Domain List", "expected_file": "nrd-30day"},
-        {"url": os.getenv('NORDOMAIN_14DAY_URL'), "description": "14-day Domain List", "expected_file": "nrd-14day"},
-        {"url": os.getenv('PHISHING_30DAY_URL'), "description": "30-day Phishing Domain List", "expected_file": "nrd-phishing-30day"},
-        {"url": os.getenv('PHISHING_14DAY_URL'), "description": "14-day Phishing Domain List", "expected_file": "nrd-phishing-14day"}
+        {"url": os.getenv('NORDOMAIN_30DAY_URL'), "description": "nrd-30day"},
+        {"url": os.getenv('NORDOMAIN_14DAY_URL'), "description": "nrd-14day"},
+        {"url": os.getenv('PHISHING_30DAY_URL'), "description": "nrd-phishing-30day"},
+        {"url": os.getenv('PHISHING_14DAY_URL'), "description": "nrd-phishing-14day"}
     ]
     user_agent = os.getenv('USER_AGENT')
     temp_dir = 'temp'
     output_dir = 'output'
     etag_file = 'etags.json'
+
     os.makedirs(temp_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
 
-    additional_source_url = os.getenv('ADDITIONAL_SOURCE_URL')
-    additional_file = os.path.join(temp_dir, "additional_domains.txt")
-    additional_file = fetch_additional_source(additional_source_url, user_agent, additional_file)
-
     for entry in urls:
-        url, description, expected_file = entry["url"], entry["description"], entry["expected_file"]
-        file_name = os.path.join(temp_dir, os.path.basename(url) if url.startswith("http") else expected_file)
-        if not url.startswith("http") or not download_file_if_etag_changed(url, file_name, etag_file):
-            if not os.path.exists(file_name):
-                continue
-        try:
-            if url.startswith("http"):
-                extract_tar_gz(file_name, temp_dir)
-        except Exception as e:
-            logging.error(f"Error extracting file from URL {url}: {e}")
-        input_file = os.path.join(temp_dir, expected_file)
-        output_file = os.path.join(output_dir, f"{expected_file}.txt")
-        adblock_output_file = os.path.join(output_dir, f"{expected_file}_adblock.txt")
-        wildcard_output_file = os.path.join(output_dir, f"{expected_file}_wildcard.txt")
-        unbound_output_file = os.path.join(output_dir, f"{expected_file}_unbound.txt")
-        base64_output_file = os.path.join(output_dir, f"{expected_file}_base64.txt")
+        url, description = entry["url"], entry["description"]
+        temp_file = os.path.join(temp_dir, os.path.basename(url))
 
-        if os.path.exists(input_file):
-            decode_file(input_file, output_file, adblock_output_file, wildcard_output_file, unbound_output_file, base64_output_file, description)
+        if not url or not download_file_if_etag_changed(url, temp_file, etag_file):
+            continue
 
-            # Merge additional source after decoding for 30-day lists only
-            if "30day" in expected_file and additional_file:
-                with open(additional_file, 'r', encoding='utf-8') as f:
-                    new_domains = set(f.read().splitlines())
-                with open(output_file, 'a', encoding='utf-8') as f:
-                    f.writelines(domain + '\n' for domain in sorted(new_domains))
-                with open(adblock_output_file, 'a', encoding='utf-8') as f:
-                    f.writelines(f"||{domain}^\n" for domain in sorted(new_domains))
-                with open(wildcard_output_file, 'a', encoding='utf-8') as f:
-                    f.writelines(f"*.{domain}\n" for domain in sorted(new_domains))
-                with open(unbound_output_file, 'a', encoding='utf-8') as f:
-                    f.writelines(f'local-zone: "{domain}" static\n' for domain in sorted(new_domains))
-                with open(base64_output_file, 'a', encoding='utf-8') as f:
-                    f.writelines(f"{encode_base64(domain)}\n" for domain in sorted(new_domains))
-
-            # Split output files into parts
+        domains = decode_file(temp_file, output_dir, description)
+        if "30day" in description:
+            output_file = os.path.join(output_dir, f"{description}_domains-only.txt")
             split_files = split_file(output_file)
-            for file in split_files:
-                logging.info(f"Generated split file: {file}")
+            logging.info(f"Split files generated: {split_files}")
 
     shutil.rmtree(temp_dir)
 
