@@ -8,7 +8,7 @@ import shutil
 from datetime import datetime
 import logging
 
-
+# Setup logging
 logging.basicConfig(level=logging.INFO)
 
 
@@ -136,16 +136,19 @@ def write_output_files(domains, output_dir, description, split_logic):
         "base64": lambda domain: encode_base64(domain)
     }
 
+    # Write the plain domains-only file
     base_file = os.path.join(output_dir, f"{description}.txt")
     with open(base_file, 'w', encoding='utf-8') as f:
         for domain in sorted(domains):
             f.write(f"{domain}\n")
     logging.info(f"Generated domains-only file: {base_file}")
 
+    # Split domains-only file if required
     if split_logic.get("domains-only", 1) > 1:
         split_files = split_file(base_file, split_logic["domains-only"])
         logging.info(f"Split domains-only file: {split_files}")
 
+    # Write other formats and split if required
     for fmt, transform in formats.items():
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         with open(filename, 'w', encoding='utf-8') as f:
@@ -153,6 +156,7 @@ def write_output_files(domains, output_dir, description, split_logic):
             for domain in sorted(domains):
                 f.write(f"{transform(domain)}\n")
 
+        # Determine number of parts based on splitting logic
         num_parts = split_logic.get(fmt, 1)
         if num_parts > 1:
             split_files = split_file(filename, num_parts)
@@ -168,7 +172,8 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
                 if decoded_str:
                     domains.update(extract_domains(decoded_str))
 
-        if additional_domains and "nrd-30day" in description:
+        # Merge additional domains for standard 30-day lists only
+        if additional_domains and description == "nrd-30day":
             initial_count = len(domains)
             domains.update(additional_domains)
             logging.info(f"Merged {len(domains) - initial_count} additional domains into {description}.")
