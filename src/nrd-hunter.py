@@ -168,7 +168,7 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
                 if decoded_str:
                     domains.update(extract_domains(decoded_str))
 
-        if additional_domains and "30day" in description:
+        if additional_domains and "nrd-30day" in description:
             initial_count = len(domains)
             domains.update(additional_domains)
             logging.info(f"Merged {len(domains) - initial_count} additional domains into {description}.")
