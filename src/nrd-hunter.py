@@ -89,10 +89,18 @@ def fetch_additional_source(url, user_agent, dest_file):
     headers = {"User-Agent": user_agent}
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        domains = re.findall(r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z-]*[a-z]{2,}[a-zA-Z-]*$', response.text, re.MULTILINE)
-        if domains:
+        domain_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z-]*[a-z]{2,}[a-zA-Z-]*$')
+        valid_domains = []
+        for line in response.text.splitlines():
+            line = line.strip()
+            if not line or len(line.split('.')) < 2:
+                continue
+            if domain_regex.match(line):
+                valid_domains.append(line)
+
+        if valid_domains:
             with open(dest_file, 'w', encoding='utf-8') as f:
-                f.writelines(domain + '\n' for domain in sorted(set(domains)))
+                f.writelines(domain + '\n' for domain in sorted(set(valid_domains)))
             return dest_file
     return None
 
