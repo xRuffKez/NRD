@@ -1,3 +1,4 @@
+
 import os
 import tarfile
 import base64
@@ -118,6 +119,12 @@ def decode_file(input_file, output_dir, description):
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
             return
 
+        # Write full domains-only file
+        base_file = os.path.join(output_dir, f"{description}.txt")
+        with open(base_file, 'w', encoding='utf-8') as f:
+            for domain in sorted(domains):
+                f.write(f"{domain}\n")
+
         write_output_files(domains, output_dir, description)
         return domains
     except Exception as e:
@@ -173,7 +180,7 @@ def process_files_with_additional_source():
         if largest_file:
             domains = decode_file(largest_file, output_dir, description)
             if "30day" in description:
-                output_file = os.path.join(output_dir, f"{description}_domains-only.txt")
+                output_file = os.path.join(output_dir, f"{description}.txt")
                 split_files = split_file(output_file)
                 logging.info(f"Split files generated: {split_files}")
 
