@@ -8,7 +8,7 @@ import shutil
 from datetime import datetime
 import logging
 
-# Setup logging
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -24,7 +24,8 @@ def download_file_if_etag_changed(url, dest, etag_file):
     if saved_etags.get(url) == etag:
         logging.info(f"No change detected for URL: {url}")
         return False
-    response = requests.get(url, stream=True)
+    headers = {"User-Agent": os.getenv("USER_AGENT")}
+    response = requests.get(url, headers=headers, stream=True)
     if response.status_code == 200:
         with open(dest, 'wb') as f:
             for chunk in response.iter_content(1024):
@@ -36,6 +37,31 @@ def download_file_if_etag_changed(url, dest, etag_file):
         return True
     logging.error(f"Failed to download from URL: {url}, Status Code: {response.status_code}")
     return False
+
+
+def fetch_additional_source():
+    """Fetches and returns domain data from ADDITIONAL_SOURCE_URL, excluding TLD-only domains."""
+    additional_url = os.getenv("ADDITIONAL_SOURCE_URL")
+    if not additional_url:
+        logging.warning("No ADDITIONAL_SOURCE_URL provided.")
+        return set()
+
+    headers = {"User-Agent": os.getenv("USER_AGENT")}
+    try:
+        response = requests.get(additional_url, headers=headers)
+        if response.status_code == 200:
+            all_domains = set(re.findall(r'(?<!@)(?:[\w-]+\.)+[a-zA-Z]{2,}(?!\.)', response.text))
+            filtered_domains = {
+                domain for domain in all_domains
+                if not re.match(r'^\.[a-zA-Z]{2,}$', domain)  # Exclude TLD-only domains (e.g., `.com`, `.top`)
+            }
+            logging.info(f"Fetched {len(all_domains)} domains, filtered to {len(filtered_domains)} valid domains.")
+            return filtered_domains
+        else:
+            logging.error(f"Failed to fetch additional source. Status Code: {response.status_code}")
+    except Exception as e:
+        logging.error(f"Error fetching additional source: {e}")
+    return set()
 
 
 def extract_largest_file_from_tar_gz(file_path, dest_dir):
@@ -110,19 +136,16 @@ def write_output_files(domains, output_dir, description, split_logic):
         "base64": lambda domain: encode_base64(domain)
     }
 
-    # Write the plain domains-only file
     base_file = os.path.join(output_dir, f"{description}.txt")
     with open(base_file, 'w', encoding='utf-8') as f:
         for domain in sorted(domains):
             f.write(f"{domain}\n")
     logging.info(f"Generated domains-only file: {base_file}")
 
-    # Split domains-only file if required
     if split_logic.get("domains-only", 1) > 1:
         split_files = split_file(base_file, split_logic["domains-only"])
         logging.info(f"Split domains-only file: {split_files}")
 
-    # Write other formats and split if required
     for fmt, transform in formats.items():
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         with open(filename, 'w', encoding='utf-8') as f:
@@ -130,14 +153,13 @@ def write_output_files(domains, output_dir, description, split_logic):
             for domain in sorted(domains):
                 f.write(f"{transform(domain)}\n")
 
-        # Determine number of parts based on splitting logic
         num_parts = split_logic.get(fmt, 1)
         if num_parts > 1:
             split_files = split_file(filename, num_parts)
             logging.info(f"Split files generated for {fmt}: {split_files}")
 
 
-def decode_file(input_file, output_dir, description, split_logic):
+def decode_file(input_file, output_dir, description, split_logic, additional_domains=None):
     try:
         with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
             domains = set()
@@ -145,6 +167,11 @@ def decode_file(input_file, output_dir, description, split_logic):
                 decoded_str = decode_base64(line.strip())
                 if decoded_str:
                     domains.update(extract_domains(decoded_str))
+
+        if additional_domains and "30day" in description:
+            initial_count = len(domains)
+            domains.update(additional_domains)
+            logging.info(f"Merged {len(domains) - initial_count} additional domains into {description}.")
 
         if not domains:
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
@@ -156,6 +183,8 @@ def decode_file(input_file, output_dir, description, split_logic):
 
 
 def process_files_with_additional_source():
+    additional_domains = fetch_additional_source()
+
     urls = [
         {
             "url": os.getenv('NORDOMAIN_30DAY_URL'),
@@ -194,7 +223,7 @@ def process_files_with_additional_source():
 
         largest_file = extract_largest_file_from_tar_gz(temp_file, temp_dir)
         if largest_file:
-            decode_file(largest_file, output_dir, description, split_logic)
+            decode_file(largest_file, output_dir, description, split_logic, additional_domains)
 
     shutil.rmtree(temp_dir)
 
