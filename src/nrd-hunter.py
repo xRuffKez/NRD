@@ -111,7 +111,7 @@ def write_output_files(domains, output_dir, description, split_logic):
         "base64": lambda domain: encode_base64(domain)
     }
 
-    # Always write the plain domains-only file without a suffix
+    # Write the plain domains-only file without a suffix
     base_file = os.path.join(output_dir, f"{description}.txt")
     with open(base_file, 'w', encoding='utf-8') as f:
         for domain in sorted(domains):
@@ -119,6 +119,10 @@ def write_output_files(domains, output_dir, description, split_logic):
 
     # Write other formats and split if required
     for fmt, transform in formats.items():
+        # Skip "domains-only" since it already has its plain file
+        if fmt == "domains-only":
+            continue
+
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         with open(filename, 'w', encoding='utf-8') as f:
             write_header(f, f"{description} ({fmt})", len(domains))
