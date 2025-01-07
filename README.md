@@ -61,14 +61,14 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ---
 
-### 🔗 Quick Links
+## 🔗 Quick Links
 
 - [Explore All Lists in my NRD Repository](https://github.com/xRuffKez/NRD/tree/main/lists)
 - [HaGeZi's DNS Blocklist Project](https://github.com/hagezi/dns-blocklists#readme)
 
 ---
 
-### 🤝 Credits
+## 🤝 Credits
 
 - [Stamus Networks](https://www.stamus-networks.com/) for the NRD Lists
 - [openSquat](https://opensquat.com/index.html) for the NRD Lists
