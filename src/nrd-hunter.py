@@ -11,6 +11,7 @@ import logging
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 
+
 def download_file_if_etag_changed(url, dest, etag_file):
     logging.info(f"Checking URL: {url}")
     response = requests.head(url)
@@ -37,19 +38,39 @@ def download_file_if_etag_changed(url, dest, etag_file):
     return False
 
 
-def extract_tar_gz(file_path, dest_dir):
+def extract_largest_file_from_tar_gz(file_path, dest_dir):
+    """
+    Extract only the largest file from a .tar.gz archive.
+    """
     try:
         with tarfile.open(file_path, "r:gz") as tar:
-            for member in tar.getmembers():
-                if member.isfile() and not member.name.endswith('.rules') and member.name != 'COPYRIGHT':
-                    member.name = os.path.basename(member.name)
-                    tar.extract(member, dest_dir)
+            # Identify the largest file
+            largest_file = max(
+                (member for member in tar.getmembers() if member.isfile()),
+                key=lambda member: member.size,
+                default=None,
+            )
+
+            if not largest_file:
+                logging.warning(f"No files found in archive: {file_path}")
+                return None
+
+            # Extract the largest file
+            tar.extract(largest_file, dest_dir)
+            extracted_file_path = os.path.join(dest_dir, os.path.basename(largest_file.name))
+            logging.info(f"Extracted the largest file: {largest_file.name} ({largest_file.size} bytes)")
+            return extracted_file_path
     except Exception as e:
-        logging.error(f"Error extracting tar.gz file {file_path}: {e}")
+        logging.error(f"Error extracting the largest file from {file_path}: {e}")
+        return None
 
 
 def decode_base64(encoded_str):
-    return base64.b64decode(encoded_str).decode('utf-8')
+    try:
+        return base64.b64decode(encoded_str).decode('utf-8')
+    except Exception as e:
+        logging.error(f"Invalid Base64 string: {encoded_str[:30]}... - {e}")
+        return ""
 
 
 def encode_base64(string):
@@ -88,7 +109,12 @@ def decode_file(input_file, output_dir, description):
             domains = set()
             for line in infile:
                 decoded_str = decode_base64(line.strip())
-                domains.update(extract_domains(decoded_str))
+                if decoded_str:
+                    domains.update(extract_domains(decoded_str))
+
+        if not domains:
+            logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
+            return
 
         write_output_files(domains, output_dir, description)
         return domains
@@ -136,14 +162,18 @@ def process_files_with_additional_source():
         url, description = entry["url"], entry["description"]
         temp_file = os.path.join(temp_dir, os.path.basename(url))
 
+        # Download and verify ETag
         if not url or not download_file_if_etag_changed(url, temp_file, etag_file):
             continue
 
-        domains = decode_file(temp_file, output_dir, description)
-        if "30day" in description:
-            output_file = os.path.join(output_dir, f"{description}_domains-only.txt")
-            split_files = split_file(output_file)
-            logging.info(f"Split files generated: {split_files}")
+        # Extract and process the largest file
+        largest_file = extract_largest_file_from_tar_gz(temp_file, temp_dir)
+        if largest_file:
+            domains = decode_file(largest_file, output_dir, description)
+            if "30day" in description:
+                output_file = os.path.join(output_dir, f"{description}_domains-only.txt")
+                split_files = split_file(output_file)
+                logging.info(f"Split files generated: {split_files}")
 
     shutil.rmtree(temp_dir)
 
