@@ -103,18 +103,18 @@ def process_files_with_additional_source():
         {"url": os.getenv('PHISHING_30DAY_URL'), "description": "30-day Phishing Domain List", "expected_file": "nrd-phishing-30day"},
         {"url": os.getenv('PHISHING_14DAY_URL'), "description": "14-day Phishing Domain List", "expected_file": "nrd-phishing-14day"}
     ]
-    user_agent = os.getenv('USER_AGENT')  # Pull User-Agent from GitHub secrets
+    user_agent = os.getenv('USER_AGENT')
     temp_dir = 'temp'
     output_dir = 'output'
     etag_file = 'etags.json'
     os.makedirs(temp_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
     output_files = set()
+
     additional_source_url = os.getenv('ADDITIONAL_SOURCE_URL')
     additional_source_file = os.path.join(temp_dir, "additional_domains.txt")
     additional_file = fetch_additional_source(additional_source_url, user_agent, additional_source_file)
-    if additional_file:
-        urls.append({"url": additional_file, "description": "Additional Domain List", "expected_file": "additional-domains"})
+
     for entry in urls:
         url, description, expected_file = entry["url"], entry["description"], entry["expected_file"]
         file_name = os.path.join(temp_dir, os.path.basename(url) if url.startswith("http") else expected_file)
@@ -131,7 +131,14 @@ def process_files_with_additional_source():
         wildcard_output_file = os.path.join(output_dir, f"{expected_file}_wildcard.txt")
         unbound_output_file = os.path.join(output_dir, f"{expected_file}_unbound.txt")
         base64_output_file = os.path.join(output_dir, f"{expected_file}_base64.txt")
+        
         if os.path.exists(input_file):
+            if "30day" in expected_file and additional_file:
+                with open(additional_file, 'r', encoding='utf-8') as f:
+                    new_domains = set(f.read().splitlines())
+                with open(input_file, 'a', encoding='utf-8') as f:
+                    f.writelines(domain + '\n' for domain in sorted(new_domains))
+                
             decode_file(input_file, output_file, adblock_output_file, wildcard_output_file, unbound_output_file, base64_output_file, description)
             files_to_split = [output_file, adblock_output_file, wildcard_output_file, base64_output_file, unbound_output_file]
             for file in files_to_split:
