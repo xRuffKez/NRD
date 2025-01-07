@@ -64,6 +64,8 @@ jobs:
           NORDOMAIN_14DAY_URL: ${{ secrets.NORDOMAIN_14DAY_URL }}
           PHISHING_30DAY_URL: ${{ secrets.PHISHING_30DAY_URL }}
           PHISHING_14DAY_URL: ${{ secrets.PHISHING_14DAY_URL }}
+          ADDITIONAL_SOURCE_URL: ${{ secrets.ADDITIONAL_SOURCE_URL }}
+          USER_AGENT: ${{ secrets.USER_AGENT }}
         run: |
           python3 src/nrd-hunter.py
 
