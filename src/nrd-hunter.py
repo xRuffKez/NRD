@@ -82,7 +82,7 @@ def write_header(outfile, description, num_entries=0):
     outfile.write(f"# {description}\n# Author: xRuffKez\n# Time of Compilation: {now}\n# Number of entries: {num_entries}\n#\n")
 
 
-def split_file(input_file, num_parts=3):
+def split_file(input_file, num_parts):
     try:
         with open(input_file, 'r', encoding='utf-8') as infile:
             lines = infile.readlines()
@@ -102,7 +102,7 @@ def split_file(input_file, num_parts=3):
         return []
 
 
-def write_output_files(domains, output_dir, description, split=False):
+def write_output_files(domains, output_dir, description, split_logic):
     formats = {
         "domains-only": lambda domain: domain,
         "adblock": lambda domain: f"||{domain}^",
@@ -111,6 +111,13 @@ def write_output_files(domains, output_dir, description, split=False):
         "base64": lambda domain: encode_base64(domain)
     }
 
+    # Always write the plain domains-only file without a suffix
+    base_file = os.path.join(output_dir, f"{description}.txt")
+    with open(base_file, 'w', encoding='utf-8') as f:
+        for domain in sorted(domains):
+            f.write(f"{domain}\n")
+
+    # Write other formats and split if required
     for fmt, transform in formats.items():
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         with open(filename, 'w', encoding='utf-8') as f:
@@ -118,13 +125,14 @@ def write_output_files(domains, output_dir, description, split=False):
             for domain in sorted(domains):
                 f.write(f"{transform(domain)}\n")
 
-        # Split files if required
-        if split:
-            split_files = split_file(filename)
+        # Determine number of parts based on splitting logic
+        num_parts = split_logic.get(fmt, 1)
+        if num_parts > 1:
+            split_files = split_file(filename, num_parts)
             logging.info(f"Split files generated for {fmt}: {split_files}")
 
 
-def decode_file(input_file, output_dir, description, split=False):
+def decode_file(input_file, output_dir, description, split_logic):
     try:
         with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
             domains = set()
@@ -137,18 +145,33 @@ def decode_file(input_file, output_dir, description, split=False):
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
             return
 
-        # Write output files and split if required
-        write_output_files(domains, output_dir, description, split)
+        write_output_files(domains, output_dir, description, split_logic)
     except Exception as e:
         logging.error(f"Error decoding file {input_file}: {e}")
 
 
 def process_files_with_additional_source():
     urls = [
-        {"url": os.getenv('NORDOMAIN_30DAY_URL'), "description": "nrd-30day", "split": True},
-        {"url": os.getenv('NORDOMAIN_14DAY_URL'), "description": "nrd-14day", "split": False},
-        {"url": os.getenv('PHISHING_30DAY_URL'), "description": "nrd-phishing-30day", "split": True},
-        {"url": os.getenv('PHISHING_14DAY_URL'), "description": "nrd-phishing-14day", "split": False}
+        {
+            "url": os.getenv('NORDOMAIN_30DAY_URL'),
+            "description": "nrd-30day",
+            "split_logic": {"domains-only": 2, "adblock": 2, "wildcard": 2, "unbound": 3, "base64": 2}
+        },
+        {
+            "url": os.getenv('NORDOMAIN_14DAY_URL'),
+            "description": "nrd-14day",
+            "split_logic": {"domains-only": 1, "adblock": 1, "wildcard": 1, "unbound": 2, "base64": 1}
+        },
+        {
+            "url": os.getenv('PHISHING_30DAY_URL'),
+            "description": "nrd-phishing-30day",
+            "split_logic": {"domains-only": 1, "adblock": 1, "wildcard": 1, "unbound": 3, "base64": 1}
+        },
+        {
+            "url": os.getenv('PHISHING_14DAY_URL'),
+            "description": "nrd-phishing-14day",
+            "split_logic": {"domains-only": 1, "adblock": 1, "wildcard": 1, "unbound": 2, "base64": 1}
+        }
     ]
     temp_dir = 'temp'
     output_dir = 'output'
@@ -158,7 +181,7 @@ def process_files_with_additional_source():
     os.makedirs(output_dir, exist_ok=True)
 
     for entry in urls:
-        url, description, split = entry["url"], entry["description"], entry["split"]
+        url, description, split_logic = entry["url"], entry["description"], entry["split_logic"]
         temp_file = os.path.join(temp_dir, os.path.basename(url))
 
         if not url or not download_file_if_etag_changed(url, temp_file, etag_file):
@@ -166,7 +189,7 @@ def process_files_with_additional_source():
 
         largest_file = extract_largest_file_from_tar_gz(temp_file, temp_dir)
         if largest_file:
-            decode_file(largest_file, output_dir, description, split)
+            decode_file(largest_file, output_dir, description, split_logic)
 
     shutil.rmtree(temp_dir)
 
