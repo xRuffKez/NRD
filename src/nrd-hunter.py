@@ -1,4 +1,3 @@
-
 import os
 import tarfile
 import base64
@@ -40,13 +39,8 @@ def download_file_if_etag_changed(url, dest, etag_file):
 
 
 def extract_largest_file_from_tar_gz(file_path, dest_dir):
-    """
-    Extract only the largest file from a .tar.gz archive.
-    Normalize the file path to place the largest file directly in the destination directory.
-    """
     try:
         with tarfile.open(file_path, "r:gz") as tar:
-            # Identify the largest file
             largest_file = max(
                 (member for member in tar.getmembers() if member.isfile()),
                 key=lambda member: member.size,
@@ -57,8 +51,7 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
                 logging.warning(f"No files found in archive: {file_path}")
                 return None
 
-            # Normalize the file path and extract it to the destination directory
-            largest_file.name = os.path.basename(largest_file.name)  # Strip directory structure
+            largest_file.name = os.path.basename(largest_file.name)
             tar.extract(largest_file, dest_dir)
             extracted_file_path = os.path.join(dest_dir, largest_file.name)
             logging.info(f"Extracted the largest file: {largest_file.name} ({largest_file.size} bytes)")
@@ -89,7 +82,27 @@ def write_header(outfile, description, num_entries=0):
     outfile.write(f"# {description}\n# Author: xRuffKez\n# Time of Compilation: {now}\n# Number of entries: {num_entries}\n#\n")
 
 
-def write_output_files(domains, output_dir, description):
+def split_file(input_file, num_parts=3):
+    try:
+        with open(input_file, 'r', encoding='utf-8') as infile:
+            lines = infile.readlines()
+        num_lines = len(lines)
+        chunk_size = (num_lines + num_parts - 1) // num_parts
+
+        base_name, ext = os.path.splitext(input_file)
+        split_files = []
+        for i in range(num_parts):
+            part_file = f"{base_name}_part{i + 1}{ext}"
+            with open(part_file, 'w', encoding='utf-8') as outfile:
+                outfile.writelines(lines[i * chunk_size:(i + 1) * chunk_size])
+            split_files.append(part_file)
+        return split_files
+    except Exception as e:
+        logging.error(f"Error splitting file {input_file}: {e}")
+        return []
+
+
+def write_output_files(domains, output_dir, description, split=False):
     formats = {
         "domains-only": lambda domain: domain,
         "adblock": lambda domain: f"||{domain}^",
@@ -105,8 +118,13 @@ def write_output_files(domains, output_dir, description):
             for domain in sorted(domains):
                 f.write(f"{transform(domain)}\n")
 
+        # Split files if required
+        if split:
+            split_files = split_file(filename)
+            logging.info(f"Split files generated for {fmt}: {split_files}")
 
-def decode_file(input_file, output_dir, description):
+
+def decode_file(input_file, output_dir, description, split=False):
     try:
         with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
             domains = set()
@@ -119,47 +137,19 @@ def decode_file(input_file, output_dir, description):
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
             return
 
-        # Write full domains-only file
-        base_file = os.path.join(output_dir, f"{description}.txt")
-        with open(base_file, 'w', encoding='utf-8') as f:
-            for domain in sorted(domains):
-                f.write(f"{domain}\n")
-
-        write_output_files(domains, output_dir, description)
-        return domains
+        # Write output files and split if required
+        write_output_files(domains, output_dir, description, split)
     except Exception as e:
         logging.error(f"Error decoding file {input_file}: {e}")
-        return set()
-
-
-def split_file(input_file, num_parts=3):
-    try:
-        with open(input_file, 'r', encoding='utf-8') as infile:
-            lines = infile.readlines()
-        num_lines = len(lines)
-        chunk_size = (num_lines + num_parts - 1) // num_parts  # Split evenly
-
-        base_name, ext = os.path.splitext(input_file)
-        split_files = []
-        for i in range(num_parts):
-            part_file = f"{base_name}_part{i + 1}{ext}"
-            with open(part_file, 'w', encoding='utf-8') as outfile:
-                outfile.writelines(lines[i * chunk_size:(i + 1) * chunk_size])
-            split_files.append(part_file)
-        return split_files
-    except Exception as e:
-        logging.error(f"Error splitting file {input_file}: {e}")
-        return []
 
 
 def process_files_with_additional_source():
     urls = [
-        {"url": os.getenv('NORDOMAIN_30DAY_URL'), "description": "nrd-30day"},
-        {"url": os.getenv('NORDOMAIN_14DAY_URL'), "description": "nrd-14day"},
-        {"url": os.getenv('PHISHING_30DAY_URL'), "description": "nrd-phishing-30day"},
-        {"url": os.getenv('PHISHING_14DAY_URL'), "description": "nrd-phishing-14day"}
+        {"url": os.getenv('NORDOMAIN_30DAY_URL'), "description": "nrd-30day", "split": True},
+        {"url": os.getenv('NORDOMAIN_14DAY_URL'), "description": "nrd-14day", "split": False},
+        {"url": os.getenv('PHISHING_30DAY_URL'), "description": "nrd-phishing-30day", "split": True},
+        {"url": os.getenv('PHISHING_14DAY_URL'), "description": "nrd-phishing-14day", "split": False}
     ]
-    user_agent = os.getenv('USER_AGENT')
     temp_dir = 'temp'
     output_dir = 'output'
     etag_file = 'etags.json'
@@ -168,21 +158,15 @@ def process_files_with_additional_source():
     os.makedirs(output_dir, exist_ok=True)
 
     for entry in urls:
-        url, description = entry["url"], entry["description"]
+        url, description, split = entry["url"], entry["description"], entry["split"]
         temp_file = os.path.join(temp_dir, os.path.basename(url))
 
-        # Download and verify ETag
         if not url or not download_file_if_etag_changed(url, temp_file, etag_file):
             continue
 
-        # Extract and process the largest file
         largest_file = extract_largest_file_from_tar_gz(temp_file, temp_dir)
         if largest_file:
-            domains = decode_file(largest_file, output_dir, description)
-            if "30day" in description:
-                output_file = os.path.join(output_dir, f"{description}.txt")
-                split_files = split_file(output_file)
-                logging.info(f"Split files generated: {split_files}")
+            decode_file(largest_file, output_dir, description, split)
 
     shutil.rmtree(temp_dir)
 
