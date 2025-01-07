@@ -8,7 +8,9 @@ import shutil
 from datetime import datetime
 import logging
 
+# Setup logging
 logging.basicConfig(level=logging.INFO)
+
 
 def download_file_if_etag_changed(url, dest, etag_file):
     logging.info(f"Checking URL: {url}")
@@ -92,6 +94,23 @@ def decode_file(input_file, output_file, adblock_output_file, wildcard_output_fi
         logging.error(f"Error decoding file {input_file}: {e}")
 
 
+def split_file(input_file):
+    try:
+        with open(input_file, 'r', encoding='utf-8') as infile:
+            lines = infile.readlines()
+        third = len(lines) // 3
+        base_name = os.path.splitext(input_file)[0]
+        parts = [f"{base_name}_part{i+1}.txt" for i in range(3)]
+        for i, part in enumerate(parts):
+            with open(part, 'w', encoding='utf-8') as outfile:
+                outfile.writelines(lines[i * third:(i + 1) * third])
+        logging.info(f"File {input_file} split into: {parts}")
+        return parts
+    except Exception as e:
+        logging.error(f"Error splitting file {input_file}: {e}")
+        return []
+
+
 def fetch_additional_source(url, user_agent, dest_file):
     headers = {"User-Agent": user_agent}
     response = requests.get(url, headers=headers)
@@ -156,6 +175,11 @@ def process_files_with_additional_source():
                     f.writelines(f'local-zone: "{domain}" static\n' for domain in sorted(new_domains))
                 with open(base64_output_file, 'a', encoding='utf-8') as f:
                     f.writelines(f"{encode_base64(domain)}\n" for domain in sorted(new_domains))
+
+            # Split output files into parts
+            split_files = split_file(output_file)
+            for file in split_files:
+                logging.info(f"Generated split file: {file}")
 
     shutil.rmtree(temp_dir)
 
