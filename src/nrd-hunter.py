@@ -41,6 +41,7 @@ def download_file_if_etag_changed(url, dest, etag_file):
 def extract_largest_file_from_tar_gz(file_path, dest_dir):
     """
     Extract only the largest file from a .tar.gz archive.
+    Normalize the file path to place the largest file directly in the destination directory.
     """
     try:
         with tarfile.open(file_path, "r:gz") as tar:
@@ -55,9 +56,10 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
                 logging.warning(f"No files found in archive: {file_path}")
                 return None
 
-            # Extract the largest file
+            # Normalize the file path and extract it to the destination directory
+            largest_file.name = os.path.basename(largest_file.name)  # Strip directory structure
             tar.extract(largest_file, dest_dir)
-            extracted_file_path = os.path.join(dest_dir, os.path.basename(largest_file.name))
+            extracted_file_path = os.path.join(dest_dir, largest_file.name)
             logging.info(f"Extracted the largest file: {largest_file.name} ({largest_file.size} bytes)")
             return extracted_file_path
     except Exception as e:
