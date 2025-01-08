@@ -31,6 +31,7 @@ jobs:
           curl -o downloads/nordomain_14day.txt ${{ secrets.NORDOMAIN_14DAY_URL }}
           curl -o downloads/phishing_30day.txt ${{ secrets.PHISHING_30DAY_URL }}
           curl -o downloads/phishing_14day.txt ${{ secrets.PHISHING_14DAY_URL }}
+          curl -A "${{ secrets.USER_AGENT }}" -o downloads/additional.txt "${{ secrets.ADDITIONAL_SOURCE_URL }}"
 
       - name: Compute file hashes
         id: compute_hashes
@@ -40,6 +41,7 @@ jobs:
           sha256sum downloads/nordomain_14day.txt > hash/current_nordomain_14day.txt
           sha256sum downloads/phishing_30day.txt > hash/current_phishing_30day.txt
           sha256sum downloads/phishing_14day.txt > hash/current_phishing_14day.txt
+          sha256sum downloads/additional.txt > hash/current_additional.txt
 
       - name: Check if files have changed
         id: check_changes
@@ -117,7 +119,7 @@ jobs:
       - name: Save hashes for next run
         if: env.changed == 'true'
         run: |
-          for file in nordomain_30day nordomain_14day phishing_30day phishing_14day; do
+          for file in nordomain_30day nordomain_14day phishing_30day phishing_14day additional; do
             mv hash/current_$file.txt hash/previous_$file.txt
           done
           git add hash/previous_*.txt
