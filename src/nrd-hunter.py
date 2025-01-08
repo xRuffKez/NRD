@@ -4,10 +4,12 @@ import requests
 import re
 import json
 import shutil
+import tarfile
 from datetime import datetime
 import logging
-import idna 
+import idna  # For Punycode encoding
 
+# Setup logging
 logging.basicConfig(level=logging.INFO)
 
 def fetch_valid_tlds():
@@ -83,7 +85,6 @@ def download_file_if_etag_changed(url, dest, etag_file):
 
 def extract_largest_file_from_tar_gz(file_path, dest_dir):
     """Extracts the largest file from a tar.gz archive."""
-    import tarfile
     try:
         with tarfile.open(file_path, "r:gz") as tar:
             largest_file = max(
@@ -114,6 +115,7 @@ def write_output_files(domains, output_dir, description, split_logic):
         "base64": lambda domain: base64.b64encode(domain.encode('utf-8')).decode('utf-8')
     }
 
+    # Write the plain domains-only file with Punycode encoding
     base_file = os.path.join(output_dir, f"{description}.txt")
     with open(base_file, 'w', encoding='utf-8') as f:
         for domain in sorted(domains):
@@ -121,10 +123,12 @@ def write_output_files(domains, output_dir, description, split_logic):
             f.write(f"{punycode_domain}\n")
     logging.info(f"Generated domains-only file: {base_file}")
 
+    # Split domains-only file if required
     if split_logic.get("domains-only", 1) > 1:
         split_files = split_file(base_file, split_logic["domains-only"])
         logging.info(f"Split domains-only file: {split_files}")
 
+    # Write other formats and split if required
     for fmt, transform in formats.items():
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         with open(filename, 'w', encoding='utf-8') as f:
@@ -134,6 +138,7 @@ def write_output_files(domains, output_dir, description, split_logic):
                 punycode_domain = idna.encode(domain).decode('ascii')
                 f.write(f"{transform(punycode_domain)}\n")
 
+        # Determine number of parts based on splitting logic
         num_parts = split_logic.get(fmt, 1)
         if num_parts > 1:
             split_files = split_file(filename, num_parts)
@@ -169,11 +174,13 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
                 if decoded_str:
                     domains.update(re.findall(r'(?<!@)(?:[\w-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str))
 
+        # Filter domains by valid TLDs
         if valid_tlds:
             initial_count = len(domains)
             domains = filter_domains(domains, valid_tlds)
             logging.info(f"Filtered domains: {initial_count} -> {len(domains)} based on valid TLDs.")
 
+        # Merge additional domains for standard 30-day lists only
         if additional_domains and description == "nrd-30day":
             initial_count = len(domains)
             domains.update(additional_domains)
