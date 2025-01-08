@@ -73,6 +73,21 @@ jobs:
         run: |
           mkdir -p lists/14-day lists/30-day lists/14-day_phishing lists/30-day_phishing
           mv output/nrd-14day_wildcard.txt lists/14-day/wildcard
+          mv output/nrd-14day.txt lists/14-day/domains-only
+          mv output/nrd-30day_part1.txt lists/30-day/domains-only
+          mv output/nrd-30day_part2.txt lists/30-day/domains-only
+          mv output/nrd-14day_adblock.txt lists/14-day/adblock
+          mv output/nrd-30day_adblock_part1.txt lists/30-day/adblock
+          mv output/nrd-30day_adblock_part2.txt lists/30-day/adblock
+          mv output/nrd-14day_base64.txt lists/14-day/base64
+          mv output/nrd-30day_base64_part1.txt lists/30-day/base64
+          mv output/nrd-30day_base64_part2.txt lists/30-day/base64
+          mv output/nrd-14day_unbound_part1.txt lists/14-day/unbound
+          mv output/nrd-14day_unbound_part2.txt lists/14-day/unbound
+          mv output/nrd-30day_unbound_part1.txt lists/30-day/unbound
+          mv output/nrd-30day_unbound_part2.txt lists/30-day/unbound
+          mv output/nrd-30day_unbound_part3.txt lists/30-day/unbound
+          mv output/nrd-14day_wildcard.txt lists/14-day/wildcard
           mv output/nrd-30day_wildcard_part1.txt lists/30-day/wildcard
           mv output/nrd-30day_wildcard_part2.txt lists/30-day/wildcard
           mv output/nrd-phishing-14day.txt lists/14-day_phishing/domains-only
@@ -88,7 +103,6 @@ jobs:
           mv output/nrd-phishing-30day_unbound_part3.txt lists/30-day_phishing/unbound
           mv output/nrd-phishing-14day_wildcard.txt lists/14-day_phishing/wildcard
           mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard
-          rm -rf output
 
       - name: Commit and push changes
         if: ${{ env.changed == 'true' }}
