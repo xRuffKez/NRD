@@ -56,6 +56,50 @@ def fetch_additional_domains():
         logging.error(f"Error fetching additional domains: {e}")
     return set()
 
+def decode_file(input_file, output_dir, description, split_config, additional_domains=None, tlds=None):
+    """Decodes an input file and processes its domains."""
+    try:
+        with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
+            domains = set()
+            for line in infile:
+                try:
+                    # Decode the line from base64
+                    decoded_str = base64.b64decode(line.strip()).decode('utf-8')
+                    if decoded_str:
+                        # Extract domain candidates using regex
+                        extracted_domains = re.findall(r'(?<!@)(?:[\w.-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str)
+
+                        # Validate domains BEFORE Punycode encoding
+                        valid_domains = {d for d in extracted_domains if is_valid_label(d)}
+                        domains.update(valid_domains)
+                except Exception as e:
+                    logging.error(f"Error decoding line in {input_file}: {e}")
+
+        # Filter domains by valid TLDs if provided
+        if tlds:
+            initial_count = len(domains)
+            domains = filter_domains(domains, tlds)
+            logging.info(f"Filtered domains: {initial_count} -> {len(domains)} based on valid TLDs.")
+
+        # Merge additional domains for standard 30-day lists only
+        if additional_domains and description == "nrd-30day":
+            initial_count = len(domains)
+            domains.update(additional_domains)
+            logging.info(f"Merged {len(domains) - initial_count} additional domains into {description}.")
+
+        # Revalidate all domains after merging to ensure compliance
+        domains = {d for d in domains if is_valid_label(d)}
+        logging.info(f"Revalidated domains: {len(domains)} remaining after strict label checks.")
+
+        if not domains:
+            logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
+            return
+
+        # Write validated domains to output files
+        write_output_files(domains, output_dir, description, split_config)
+    except Exception as e:
+        logging.error(f"Error decoding file {input_file}: {e}")
+
 def download_file(url, destination):
     """Downloads a file from the specified URL."""
     logging.info(f"Downloading from URL: {url}")
