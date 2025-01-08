@@ -1,8 +1,5 @@
 # nrd-phishing-14day (unbound)
-# Author: xRuffKez
-# Time of Compilation: 2025-01-08 08:28:17 UTC
-# Number of entries: 6146
-#
+# Generated on 2025-01-08 16:44:44 UTC
 local-zone: "014-office.com" static
 local-zone: "118924-google.com" static
 local-zone: "153412-apple.com" static
@@ -3074,3 +3071,4 @@ local-zone: "deliveryqmj.top" static
 local-zone: "deliveryqmk.top" static
 local-zone: "deliveryqml.top" static
 local-zone: "deliveryqmlx.top" static
+local-zone: "deliveryqmn.top" static
