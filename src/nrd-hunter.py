@@ -230,7 +230,6 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
         logging.error(f"Error decoding file {input_file}: {e}")
 
 def process_files_with_additional_source():
-    """Processes files with the additional source and TLD filtering."""
     additional_domains = fetch_additional_source()
     valid_tlds = fetch_valid_tlds()
 
