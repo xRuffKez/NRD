@@ -27,9 +27,10 @@ def fetch_valid_tlds():
         logging.error(f"Error fetching TLD list: {e}")
     return set()
 
-def is_valid_label(domain):
-    labels = domain.split('.')
-    return all(label and not (label.startswith('-') or label.endswith('-')) for label in labels)
+def is_valid_domain(domain, valid_tlds):
+    """Checks if a domain ends with a valid TLD."""
+    match = re.search(r'\.([a-zA-Z]{2,})$', domain)
+    return match and match.group(1).lower() in valid_tlds
 
 def filter_domains(domains, valid_tlds):
     """Filters a set of domains to include only those with valid TLDs."""
@@ -164,9 +165,37 @@ def split_file(input_file, num_parts):
         return []
 
 def is_valid_label(domain):
-    """Validates that no label in the domain starts or ends with a hyphen."""
-    labels = domain.split('.')
-    return all(label and not (label.startswith('-') or label.endswith('-')) for label in labels)
+    """
+    Validates each label of a domain based on the following rules:
+    1. The domain must allow a-z, A-Z, 0-9, hyphen (-), and non-ASCII characters.
+    2. Each label must be between 1 and 63 characters long.
+    3. Labels must not start or end with a hyphen (-).
+    4. The final TLD must be between 2 and 6 characters long.
+    """
+    try:
+        # Check the overall domain length
+        if len(domain) < 1 or len(domain) > 253:
+            return False
+
+        # Split domain into labels
+        labels = domain.split('.')
+
+        # Validate all labels except the last TLD
+        for label in labels[:-1]:
+            if len(label) < 1 or len(label) > 63 or label.startswith('-') or label.endswith('-'):
+                return False
+            # Allow any Unicode characters (non-ASCII) but ensure valid general structure
+            if not re.match(r'^[\w-]+$', label, re.UNICODE):  # Allows a-z, A-Z, 0-9, -, and Unicode characters
+                return False
+
+        # Validate the TLD (last label)
+        tld = labels[-1]
+        if len(tld) < 2 or len(tld) > 6 or not re.match(r'^[a-zA-Z]+$', tld):
+            return False
+
+        return True
+    except Exception:
+        return False
 
 def decode_file(input_file, output_dir, description, split_logic, additional_domains=None, valid_tlds=None):
     """Decodes an input file and processes its domains."""
@@ -175,15 +204,19 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
             domains = set()
             for line in infile:
                 try:
+                    # Decode the line from base64
                     decoded_str = base64.b64decode(line.strip()).decode('utf-8')
                     if decoded_str:
-                        extracted_domains = re.findall(r'(?<!@)(?:[\w-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str)
+                        # Extract domain candidates using regex
+                        extracted_domains = re.findall(r'(?<!@)(?:[\w.-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str)
+
+                        # Validate domains BEFORE Punycode encoding
                         valid_domains = {d for d in extracted_domains if is_valid_label(d)}
                         domains.update(valid_domains)
                 except Exception as e:
                     logging.error(f"Error decoding line in {input_file}: {e}")
 
-        # Filter domains by valid TLDs
+        # Filter domains by valid TLDs if provided
         if valid_tlds:
             initial_count = len(domains)
             domains = filter_domains(domains, valid_tlds)
@@ -199,6 +232,7 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
             return
 
+        # Write validated domains to output files
         write_output_files(domains, output_dir, description, split_logic)
     except Exception as e:
         logging.error(f"Error decoding file {input_file}: {e}")
