@@ -13,6 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -21,21 +29,53 @@ jobs:
       - name: Install dependencies
         run: pip install --upgrade pip requests
 
-      - name: Download files
+      - name: Cache ETags and Hashes
+        uses: actions/cache@v3
+        with:
+          path: cache_data
+          key: ${{ runner.os }}-etag-hash
+          restore-keys: |
+            ${{ runner.os }}-etag-hash-
+
+      - name: Prepare directories
+        run: mkdir -p downloads cache_data/etags cache_data/hashes
+
+      - name: Check and Download Files with ETag
         run: |
-          mkdir -p downloads
-          curl -o downloads/nordomain_30day.txt ${{ secrets.NORDOMAIN_30DAY_URL }}
-          curl -o downloads/nordomain_14day.txt ${{ secrets.NORDOMAIN_14DAY_URL }}
-          curl -o downloads/phishing_30day.txt ${{ secrets.PHISHING_30DAY_URL }}
-          curl -o downloads/phishing_14day.txt ${{ secrets.PHISHING_14DAY_URL }}
-          curl -A "${{ secrets.USER_AGENT }}" -o downloads/additional.txt "${{ secrets.ADDITIONAL_SOURCE_URL }}"
+          download_with_etag() {
+            URL=$1
+            FILENAME=$2
+            EFILE="cache_data/etags/$FILENAME.etag"
+            OUTFILE="downloads/$FILENAME"
+
+            # Use curl with ETag support
+            if [ -f "$EFILE" ]; then
+              curl -z "$EFILE" -o "$OUTFILE" "$URL" --dump-header "$EFILE.tmp" || true
+            else
+              curl -o "$OUTFILE" "$URL" --dump-header "$EFILE.tmp" || true
+            fi
+
+            # Extract and save the new ETag
+            grep -i ETag "$EFILE.tmp" | awk '{print $2}' | tr -d '\r' > "$EFILE" || true
+            rm -f "$EFILE.tmp"
+          }
+
+          # Call the function for each file
+          download_with_etag "${{ secrets.NORDOMAIN_30DAY_URL }}" nordomain_30day.txt
+          download_with_etag "${{ secrets.NORDOMAIN_14DAY_URL }}" nordomain_14day.txt
+          download_with_etag "${{ secrets.PHISHING_30DAY_URL }}" phishing_30day.txt
+          download_with_etag "${{ secrets.PHISHING_14DAY_URL }}" phishing_14day.txt
+
+          # Mandatory User-Agent for additional.txt
+          curl -A "${{ secrets.USER_AGENT }}" -o downloads/additional.txt "${{ secrets.ADDITIONAL_SOURCE_URL }}" --dump-header cache_data/etags/additional.txt.etag.tmp || true
+          grep -i ETag cache_data/etags/additional.txt.etag.tmp | awk '{print $2}' | tr -d '\r' > cache_data/etags/additional.txt.etag || true
+          rm -f cache_data/etags/additional.txt.etag.tmp
 
       - name: Compute file hashes
         id: compute_hashes
         run: |
-          mkdir -p hash
           for file in nordomain_30day nordomain_14day phishing_30day phishing_14day additional; do
-            sha256sum downloads/$file.txt > hash/current_$file.txt
+            sha256sum downloads/$file.txt > cache_data/hashes/$file.hash
           done
 
       - name: Check if files have changed
@@ -43,7 +83,7 @@ jobs:
         run: |
           CHANGED=false
           for file in nordomain_30day nordomain_14day phishing_30day phishing_14day additional; do
-            if [ ! -f hash/previous_$file.txt ] || ! cmp -s hash/previous_$file.txt hash/current_$file.txt; then
+            if [ ! -f cache_data/hashes/$file.previous ] || ! cmp -s cache_data/hashes/$file.previous cache_data/hashes/$file.hash; then
               echo "$file has changed."
               CHANGED=true
             fi
@@ -95,18 +135,15 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add lists hash/current_*.txt
+          git add lists
           git commit -m "Update NRD Lists ($(date +'%Y-%m-%d'))"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Save hashes for next run
+      - name: Save hashes for cache
         if: ${{ env.changed == 'true' }}
         run: |
           for file in nordomain_30day nordomain_14day phishing_30day phishing_14day additional; do
-            mv hash/current_$file.txt hash/previous_$file.txt
+            mv cache_data/hashes/$file.hash cache_data/hashes/$file.previous
           done
-          git add hash/previous_*.txt
-          git commit -m "Save hashes for next run"
-          git push
