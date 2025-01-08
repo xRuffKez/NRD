@@ -164,15 +164,25 @@ def split_file(input_file, num_parts):
         logging.error(f"Error splitting file {input_file}: {e}")
         return []
 
+def is_valid_label(domain):
+    """Validates that no label in the domain starts or ends with a hyphen."""
+    labels = domain.split('.')
+    return all(label and not (label.startswith('-') or label.endswith('-')) for label in labels)
+
 def decode_file(input_file, output_dir, description, split_logic, additional_domains=None, valid_tlds=None):
     """Decodes an input file and processes its domains."""
     try:
         with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
             domains = set()
             for line in infile:
-                decoded_str = base64.b64decode(line.strip()).decode('utf-8')
-                if decoded_str:
-                    domains.update(re.findall(r'(?<!@)(?:[\w-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str))
+                try:
+                    decoded_str = base64.b64decode(line.strip()).decode('utf-8')
+                    if decoded_str:
+                        extracted_domains = re.findall(r'(?<!@)(?:[\w-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str)
+                        valid_domains = {d for d in extracted_domains if is_valid_label(d)}
+                        domains.update(valid_domains)
+                except Exception as e:
+                    logging.error(f"Error decoding line in {input_file}: {e}")
 
         # Filter domains by valid TLDs
         if valid_tlds:
