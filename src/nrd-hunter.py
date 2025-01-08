@@ -27,10 +27,9 @@ def fetch_valid_tlds():
         logging.error(f"Error fetching TLD list: {e}")
     return set()
 
-def is_valid_domain(domain, valid_tlds):
-    """Checks if a domain ends with a valid TLD."""
-    match = re.search(r'\.([a-zA-Z]{2,})$', domain)
-    return match and match.group(1).lower() in valid_tlds
+def is_valid_label(domain):
+    labels = domain.split('.')
+    return all(label and not (label.startswith('-') or label.endswith('-')) for label in labels)
 
 def filter_domains(domains, valid_tlds):
     """Filters a set of domains to include only those with valid TLDs."""
