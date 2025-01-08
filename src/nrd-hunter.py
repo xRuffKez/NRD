@@ -106,7 +106,6 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
         return None
 
 def write_output_files(domains, output_dir, description, split_logic):
-    """Writes filtered domains to output files in various formats."""
     formats = {
         "adblock": lambda domain: f"||{domain}^",
         "wildcard": lambda domain: f"*.{domain}",
@@ -128,7 +127,7 @@ def write_output_files(domains, output_dir, description, split_logic):
     for fmt, transform in formats.items():
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         with open(filename, 'w', encoding='utf-8') as f:
-            now = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
+            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
             f.write(f"# {description} ({fmt})\n# Generated on {now}\n")
             for domain in sorted(domains):
                 punycode_domain = idna.encode(domain).decode('ascii')
