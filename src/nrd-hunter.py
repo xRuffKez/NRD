@@ -172,6 +172,7 @@ def is_valid_label(domain):
     3. Labels must not start or end with a hyphen (-).
     4. The final TLD must be between 2 and 6 characters long.
     5. Reject characters that are not valid for domain names (e.g., superscripts, math symbols).
+    6. Reject domain labels with hyphens in disallowed positions (e.g., 3rd or 4th position).
     """
     try:
         # Check the overall domain length
@@ -185,6 +186,11 @@ def is_valid_label(domain):
         for label in labels[:-1]:
             if len(label) < 1 or len(label) > 63 or label.startswith('-') or label.endswith('-'):
                 return False
+            
+            # Check for hyphen in disallowed positions (e.g., 3rd and 4th)
+            if len(label) > 3 and label[2] == '-' and label[3] == '-':
+                return False
+            
             # Allow only valid Unicode characters (excluding symbols like superscripts)
             if not re.match(r'^[a-zA-Z0-9\u00C0-\u017F\u0400-\u04FF\u0530-\u058F\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u1E00-\u1EFF-]+$', label):
                 return False
@@ -197,6 +203,7 @@ def is_valid_label(domain):
         return True
     except Exception:
         return False
+
 
 def decode_file(input_file, output_dir, description, split_logic, additional_domains=None, valid_tlds=None):
     """Decodes an input file and processes its domains."""
