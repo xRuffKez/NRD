@@ -228,6 +228,10 @@ def decode_file(input_file, output_dir, description, split_logic, additional_dom
             domains.update(additional_domains)
             logging.info(f"Merged {len(domains) - initial_count} additional domains into {description}.")
 
+        # Revalidate all domains after merging to ensure compliance
+        domains = {d for d in domains if is_valid_label(d)}
+        logging.info(f"Revalidated domains: {len(domains)} remaining after strict label checks.")
+
         if not domains:
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
             return
