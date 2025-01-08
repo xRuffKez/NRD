@@ -171,6 +171,7 @@ def is_valid_label(domain):
     2. Each label must be between 1 and 63 characters long.
     3. Labels must not start or end with a hyphen (-).
     4. The final TLD must be between 2 and 6 characters long.
+    5. Reject characters that are not valid for domain names (e.g., superscripts, math symbols).
     """
     try:
         # Check the overall domain length
@@ -184,8 +185,8 @@ def is_valid_label(domain):
         for label in labels[:-1]:
             if len(label) < 1 or len(label) > 63 or label.startswith('-') or label.endswith('-'):
                 return False
-            # Allow any Unicode characters (non-ASCII) but ensure valid general structure
-            if not re.match(r'^[\w-]+$', label, re.UNICODE):  # Allows a-z, A-Z, 0-9, -, and Unicode characters
+            # Allow only valid Unicode characters (excluding symbols like superscripts)
+            if not re.match(r'^[a-zA-Z0-9\u00C0-\u017F\u0400-\u04FF\u0530-\u058F\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u1E00-\u1EFF-]+$', label):
                 return False
 
         # Validate the TLD (last label)
