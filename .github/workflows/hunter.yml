@@ -10,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout Repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Cache Python Dependencies
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -21,14 +23,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      # Step 3: Set Up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
+      # Step 4: Install Dependencies
       - name: Install dependencies
         run: pip install --upgrade pip requests
 
+      # Step 5: Cache ETags and Hashes
       - name: Cache ETags and Hashes
         uses: actions/cache@v3
         with:
@@ -37,9 +42,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-etag-hash-
 
+      # Step 6: Prepare Directories
       - name: Prepare directories
         run: mkdir -p downloads cache_data/etags cache_data/hashes
 
+      # Step 7: Download Files with ETag Support
       - name: Check and Download Files with ETag
         run: |
           download_with_etag() {
@@ -58,6 +65,12 @@ jobs:
             # Extract and save the new ETag
             grep -i ETag "$EFILE.tmp" | awk '{print $2}' | tr -d '\r' > "$EFILE" || true
             rm -f "$EFILE.tmp"
+
+            # Check if file exists
+            if [ ! -f "$OUTFILE" ]; then
+              echo "Error: Failed to download $FILENAME"
+              exit 1
+            fi
           }
 
           # Call the function for each file
@@ -71,13 +84,29 @@ jobs:
           grep -i ETag cache_data/etags/additional.txt.etag.tmp | awk '{print $2}' | tr -d '\r' > cache_data/etags/additional.txt.etag || true
           rm -f cache_data/etags/additional.txt.etag.tmp
 
+          # Verify additional.txt exists
+          if [ ! -f downloads/additional.txt ]; then
+            echo "Error: Failed to download additional.txt"
+            exit 1
+          fi
+
+      # Step 8: Debug - List Downloaded Files
+      - name: List downloaded files
+        run: ls -l downloads
+
+      # Step 9: Compute File Hashes
       - name: Compute file hashes
         id: compute_hashes
         run: |
           for file in nordomain_30day nordomain_14day phishing_30day phishing_14day additional; do
-            sha256sum downloads/$file.txt > cache_data/hashes/$file.hash
+            if [ -f downloads/$file.txt ]; then
+              sha256sum downloads/$file.txt > cache_data/hashes/$file.hash
+            else
+              echo "Warning: File downloads/$file.txt does not exist, skipping hash computation."
+            fi
           done
 
+      # Step 10: Check If Files Have Changed
       - name: Check if files have changed
         id: check_changes
         run: |
@@ -92,10 +121,12 @@ jobs:
         env:
           GITHUB_ENV: $GITHUB_ENV
 
+      # Step 11: Skip Further Processing If Unchanged
       - name: Skip processing if unchanged
         if: ${{ env.changed == 'false' }}
         run: echo "Skipping further steps as no files have changed."
 
+      # Step 12: Run Script If Files Have Changed
       - name: Run script
         if: ${{ env.changed == 'true' }}
         env:
@@ -108,6 +139,7 @@ jobs:
         run: |
           python3 src/nrd-hunter.py
 
+      # Step 13: Move Output Files
       - name: Move output files
         if: ${{ env.changed == 'true' }}
         run: |
@@ -130,6 +162,7 @@ jobs:
           mv output/nrd-phishing-30day_wildcard.txt lists/30-day_phishing/wildcard
           rm -rf output
 
+      # Step 14: Commit and Push Changes
       - name: Commit and push changes
         if: ${{ env.changed == 'true' }}
         run: |
@@ -141,6 +174,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Step 15: Save Hashes for Cache
       - name: Save hashes for cache
         if: ${{ env.changed == 'true' }}
         run: |
