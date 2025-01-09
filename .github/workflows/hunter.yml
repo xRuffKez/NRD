@@ -49,8 +49,6 @@ jobs:
             fi
           done
           echo "changed=$CHANGED" >> $GITHUB_ENV
-        env:
-          GITHUB_ENV: $GITHUB_ENV
 
       - name: Skip processing if unchanged
         if: ${{ env.changed == 'false' }}
