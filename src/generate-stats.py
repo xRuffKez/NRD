@@ -14,24 +14,6 @@ def compute_tld_stats(domains):
     tlds = [domain.split('.')[-1].lower() for domain in domains]
     return Counter(tlds)
 
-def plot_stats(stats, output_path):
-    """Plots statistics and saves them as an image."""
-    labels = list(stats.keys())
-    values = list(stats.values())
-
-    plt.figure(figsize=(12, 6))
-
-    # Bar Chart
-    plt.bar(labels, values, color='skyblue')
-    plt.title('Top 10 TLDs')
-    plt.ylabel('Count')
-    plt.xlabel('TLD')
-    plt.xticks(rotation=45)
-
-    plt.tight_layout()
-    plt.savefig(output_path)
-    plt.close()
-
 def generate_stats(base_dir, output_image):
     """Generates and visualizes statistics from domain-only files."""
     sources = [
@@ -42,40 +24,37 @@ def generate_stats(base_dir, output_image):
     ]
 
     stats = {}
-    yesterday_stats = {}
     for source in sources:
-        today_domains = read_domains(source["file"])
-        yesterday_file = source["file"].replace("_stats.txt", "_yesterday_stats.txt")
-        yesterday_domains = read_domains(yesterday_file)
+        domains = read_domains(source["file"])
+        tld_stats = compute_tld_stats(domains)
+        stats[source["name"]] = dict(tld_stats.most_common(10))
 
-        domain_count = len(today_domains)
-        domain_change = domain_count - len(yesterday_domains)
-        tld_stats = compute_tld_stats(today_domains)
-        top_10_tlds = dict(tld_stats.most_common(10))
-
-        stats[source["name"]] = {
-            "count": domain_count,
-            "change": domain_change,
-            "top_10_tlds": top_10_tlds
-        }
-    
     # Visualization
-    fig, axs = plt.subplots(2, 2, figsize=(16, 12))
+    num_sources = len(sources)
+    fig, axs = plt.subplots(num_sources, 1, figsize=(12, 5 * num_sources))
+
+    if num_sources == 1:  # Handle single subplot case
+        axs = [axs]
 
     for i, source in enumerate(sources):
-        ax = axs[i // 2, i % 2]
-        source_stats = stats[source["name"]]
-        
-        labels = list(source_stats["top_10_tlds"].keys())
-        values = list(source_stats["top_10_tlds"].values())
-        
+        ax = axs[i]
+        source_name = source["name"]
+        tld_stats = stats[source_name]
+
+        labels = list(tld_stats.keys())
+        values = list(tld_stats.values())
+
         ax.bar(labels, values, color='skyblue')
-        ax.set_title(f"{source['name']} - Top 10 TLDs")
-        ax.set_ylabel('Count')
-        ax.set_xlabel('TLD')
+        ax.set_title(f"{source_name} - Top 10 TLDs", fontsize=14)
+        ax.set_ylabel('Count', fontsize=12)
+        ax.set_xlabel('TLD', fontsize=12)
         ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, rotation=45)
+        ax.set_xticklabels(labels, rotation=45, fontsize=10)
         ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+        # Add numerical annotations
+        for x, y in enumerate(values):
+            ax.text(x, y + max(values) * 0.01, str(y), ha='center', fontsize=10)
 
     plt.tight_layout()
     plt.savefig(output_image)
