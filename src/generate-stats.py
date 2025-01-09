@@ -24,19 +24,27 @@ def generate_stats(base_dir, output_image):
     ]
 
     stats = {}
+    valid_sources = []
+
     for source in sources:
         domains = read_domains(source["file"])
-        tld_stats = compute_tld_stats(domains)
-        stats[source["name"]] = dict(tld_stats.most_common(10))
+        if domains:  # Only include files with data
+            tld_stats = compute_tld_stats(domains)
+            stats[source["name"]] = dict(tld_stats.most_common(10))
+            valid_sources.append(source)
+
+    if not valid_sources:
+        print("No valid data found. No graphs will be generated.")
+        return
 
     # Visualization
-    num_sources = len(sources)
+    num_sources = len(valid_sources)
     fig, axs = plt.subplots(num_sources, 1, figsize=(12, 5 * num_sources))
 
     if num_sources == 1:  # Handle single subplot case
         axs = [axs]
 
-    for i, source in enumerate(sources):
+    for i, source in enumerate(valid_sources):
         ax = axs[i]
         source_name = source["name"]
         tld_stats = stats[source_name]
