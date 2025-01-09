@@ -106,6 +106,7 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
         return None
 
 def write_output_files(domains, output_dir, description, split_logic):
+    """Writes domain data in various formats and splits files if needed."""
     formats = {
         "adblock": lambda domain: f"||{domain}^",
         "wildcard": lambda domain: f"*.{domain}",
@@ -113,30 +114,44 @@ def write_output_files(domains, output_dir, description, split_logic):
         "base64": lambda domain: base64.b64encode(domain.encode('utf-8')).decode('utf-8')
     }
 
-    base_file = os.path.join(output_dir, f"{description}.txt")
-    with open(base_file, 'w', encoding='utf-8') as f:
-        for domain in sorted(domains):
-            punycode_domain = idna.encode(domain).decode('ascii')
-            f.write(f"{punycode_domain}\n")
-    logging.info(f"Generated domains-only file: {base_file}")
+    # Ensure the output directory exists
+    os.makedirs(output_dir, exist_ok=True)
 
-    if split_logic.get("domains-only", 1) > 1:
-        split_files = split_file(base_file, split_logic["domains-only"])
-        logging.info(f"Split domains-only file: {split_files}")
-
-    for fmt, transform in formats.items():
-        filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
-        with open(filename, 'w', encoding='utf-8') as f:
-            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
-            f.write(f"# {description} ({fmt})\n# Generated on {now}\n")
+    # Generate the domains-only file
+    base_file = os.path.join(output_dir, f"{description}_domains-only.txt")
+    try:
+        with open(base_file, 'w', encoding='utf-8') as f:
             for domain in sorted(domains):
                 punycode_domain = idna.encode(domain).decode('ascii')
-                f.write(f"{transform(punycode_domain)}\n")
+                f.write(f"{punycode_domain}\n")
+        logging.info(f"Generated domains-only file: {base_file}")
+    except Exception as e:
+        logging.error(f"Failed to write domains-only file: {e}")
 
-        num_parts = split_logic.get(fmt, 1)
-        if num_parts > 1:
-            split_files = split_file(filename, num_parts)
-            logging.info(f"Split files generated for {fmt}: {split_files}")
+    # Split the domains-only file if needed
+    if split_logic.get("domains-only", 1) > 1:
+        split_files = split_file(base_file, split_logic["domains-only"])
+        logging.info(f"Split domains-only file into: {split_files}")
+
+    # Generate files for each format
+    for fmt, transform in formats.items():
+        filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
+        try:
+            with open(filename, 'w', encoding='utf-8') as f:
+                now = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
+                f.write(f"# {description} ({fmt})\n# Generated on {now}\n")
+                for domain in sorted(domains):
+                    punycode_domain = idna.encode(domain).decode('ascii')
+                    f.write(f"{transform(punycode_domain)}\n")
+            logging.info(f"Generated file: {filename}")
+
+            # Split the file for the format if needed
+            num_parts = split_logic.get(fmt, 1)
+            if num_parts > 1:
+                split_files = split_file(filename, num_parts)
+                logging.info(f"Split {fmt} file into: {split_files}")
+        except Exception as e:
+            logging.error(f"Failed to write {fmt} file: {e}")
 
 def split_file(input_file, num_parts):
     """Splits a file into the specified number of parts."""
