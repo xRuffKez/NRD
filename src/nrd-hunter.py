@@ -97,7 +97,7 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
                 return None
 
             largest_file.name = os.path.basename(largest_file.name)
-            tar.extract(largest_file, dest_dir)
+            tar.extract(largest_file, dest_dir, filter=tarfile.ExtractPolicy.ALLOW)
             extracted_file_path = os.path.join(dest_dir, largest_file.name)
             logging.info(f"Extracted the largest file: {largest_file.name} ({largest_file.size} bytes)")
             return extracted_file_path
