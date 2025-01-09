@@ -277,6 +277,6 @@ def process_files_with_additional_source():
 
 if __name__ == '__main__':
     try:
-    process_files_with_additional_source()
-finally:
-    shutil.rmtree(temp_dir, ignore_errors=True)
+        process_files_with_additional_source()
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
