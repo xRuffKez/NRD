@@ -117,23 +117,23 @@ def write_output_files(domains, output_dir, description, split_logic):
     # Ensure the output directory exists
     os.makedirs(output_dir, exist_ok=True)
 
-    # Generate the domains-only file
-    base_file = os.path.join(output_dir, f"{description}_domains-only.txt")
+    # Generate the base file for domains without renaming to _domains-only
+    base_file = os.path.join(output_dir, f"{description}.txt")
     try:
         with open(base_file, 'w', encoding='utf-8') as f:
             for domain in sorted(domains):
                 punycode_domain = idna.encode(domain).decode('ascii')
                 f.write(f"{punycode_domain}\n")
-        logging.info(f"Generated domains-only file: {base_file}")
+        logging.info(f"Generated base file: {base_file}")
     except Exception as e:
-        logging.error(f"Failed to write domains-only file: {e}")
+        logging.error(f"Failed to write base file: {e}")
 
     # Split the domains-only file if needed
     if split_logic.get("domains-only", 1) > 1:
         split_files = split_file(base_file, split_logic["domains-only"])
-        logging.info(f"Split domains-only file into: {split_files}")
+        logging.info(f"Split domains file into: {split_files}")
 
-    # Generate files for each format
+    # Generate files for each additional format
     for fmt, transform in formats.items():
         filename = os.path.join(output_dir, f"{description}_{fmt}.txt")
         try:
