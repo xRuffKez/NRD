@@ -255,9 +255,6 @@ def process_files_with_additional_source():
             "split_logic": {"domains-only": 1, "adblock": 1, "wildcard": 1, "unbound": 2, "base64": 1}
         }
     ]
-    temp_dir = 'temp'
-    output_dir = 'output'
-    etag_file = 'etags.json'
 
     os.makedirs(temp_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
@@ -276,6 +273,10 @@ def process_files_with_additional_source():
     shutil.rmtree(temp_dir)
 
 if __name__ == '__main__':
+    temp_dir = 'temp'
+    output_dir = 'output'
+    etag_file = 'etags.json'
+
     try:
         process_files_with_additional_source()
     finally:
