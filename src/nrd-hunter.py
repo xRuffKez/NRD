@@ -12,19 +12,21 @@ import idna
 logging.basicConfig(level=logging.INFO)
 
 def fetch_valid_tlds():
-    """Fetches the list of valid TLDs from the IANA website."""
     tld_url = "https://data.iana.org/TLD/tlds-alpha-by-domain.txt"
     try:
         response = requests.get(tld_url)
         if response.status_code == 200:
             tlds = {line.strip().lower() for line in response.text.splitlines() if line and not line.startswith("#")}
-            logging.info(f"Fetched {len(tlds)} valid TLDs.")
-            return tlds
-        else:
-            logging.error(f"Failed to fetch TLDs. Status Code: {response.status_code}")
+            if tlds:
+                logging.info(f"Fetched {len(tlds)} valid TLDs.")
+                return tlds
     except Exception as e:
         logging.error(f"Error fetching TLD list: {e}")
-    return set()
+    
+    # Fallback TLDs
+    fallback_tlds = {"com", "org", "net", "edu", "gov", "info"}
+    logging.warning(f"Using fallback TLDs: {fallback_tlds}")
+    return fallback_tlds
 
 def is_valid_domain(domain, valid_tlds):
     """Checks if a domain ends with a valid TLD."""
@@ -86,6 +88,7 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
     """Extracts the largest file from a tar.gz archive."""
     try:
         with tarfile.open(file_path, "r:gz") as tar:
+            # Identify the largest file in the archive
             largest_file = max(
                 (member for member in tar.getmembers() if member.isfile()),
                 key=lambda member: member.size,
@@ -96,9 +99,9 @@ def extract_largest_file_from_tar_gz(file_path, dest_dir):
                 logging.warning(f"No files found in archive: {file_path}")
                 return None
 
-            largest_file.name = os.path.basename(largest_file.name)
-            tar.extract(largest_file, dest_dir, filter=tarfile.ExtractPolicy.ALLOW)
+            # Set the extraction path
             extracted_file_path = os.path.join(dest_dir, largest_file.name)
+            tar.extract(largest_file, dest_dir)  # Extract without "ExtractPolicy"
             logging.info(f"Extracted the largest file: {largest_file.name} ({largest_file.size} bytes)")
             return extracted_file_path
     except Exception as e:
@@ -199,48 +202,30 @@ def is_valid_label(domain):
     except Exception:
         return False
 
-
 def decode_file(input_file, output_dir, description, split_logic, additional_domains=None, valid_tlds=None):
-    """Decodes an input file and processes its domains."""
     try:
         with open(input_file, 'r', encoding='utf-8', errors='replace') as infile:
             domains = set()
             for line in infile:
                 try:
-                    # Decode the line from base64
                     decoded_str = base64.b64decode(line.strip()).decode('utf-8')
-                    if decoded_str:
-                        # Extract domain candidates using regex
-                        extracted_domains = re.findall(r'(?<!@)(?:[\w.-]+\.)+[a-zA-Z]{2,}(?!\.)', decoded_str)
-
-                        # Validate domains BEFORE Punycode encoding
-                        valid_domains = {d for d in extracted_domains if is_valid_label(d)}
-                        domains.update(valid_domains)
-                except Exception as e:
-                    logging.error(f"Error decoding line in {input_file}: {e}")
-
-        # Filter domains by valid TLDs if provided
+                    extracted_domains = re.findall(r'(?<!@)(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}', decoded_str)
+                    valid_domains = {d for d in extracted_domains if is_valid_label(d)}
+                    domains.update(valid_domains)
+                except Exception:
+                    logging.warning(f"Failed to decode line: {line.strip()[:50]}...")
+        
+        # Apply TLD and additional domain filtering
         if valid_tlds:
-            initial_count = len(domains)
             domains = filter_domains(domains, valid_tlds)
-            logging.info(f"Filtered domains: {initial_count} -> {len(domains)} based on valid TLDs.")
-
-        # Merge additional domains for standard 30-day lists only
         if additional_domains and description == "nrd-30day":
-            initial_count = len(domains)
             domains.update(additional_domains)
-            logging.info(f"Merged {len(domains) - initial_count} additional domains into {description}.")
-
-        # Revalidate all domains after merging to ensure compliance
         domains = {d for d in domains if is_valid_label(d)}
-        logging.info(f"Revalidated domains: {len(domains)} remaining after strict label checks.")
 
-        if not domains:
+        if domains:
+            write_output_files(domains, output_dir, description, split_logic)
+        else:
             logging.warning(f"No valid domains found in file {input_file}. Skipping output generation.")
-            return
-
-        # Write validated domains to output files
-        write_output_files(domains, output_dir, description, split_logic)
     except Exception as e:
         logging.error(f"Error decoding file {input_file}: {e}")
 
@@ -291,4 +276,7 @@ def process_files_with_additional_source():
     shutil.rmtree(temp_dir)
 
 if __name__ == '__main__':
+    try:
     process_files_with_additional_source()
+finally:
+    shutil.rmtree(temp_dir, ignore_errors=True)
