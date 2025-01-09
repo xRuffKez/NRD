@@ -130,7 +130,7 @@ jobs:
 
       - name: Run statistics script
         if: ${{ env.changed == 'true' }}
-        run: python3 src/generate_stats.py
+        run: python3 src/generate-stats.py
 
       - name: Move stats image
         if: ${{ env.changed == 'true' }}
