@@ -79,7 +79,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## NRD 30 Top 10 Tlds
 
-[!](img/stats.png)
+![](img/stats.png)
 
 ---
 
