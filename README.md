@@ -1,4 +1,4 @@
-[![Update](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml/badge.svg)](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+[![Update](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml/badge.svg)](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml)
 
 # 🛡️ NRD Lists - Block Newly Registered Domains
 
