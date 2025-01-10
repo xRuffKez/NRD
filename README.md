@@ -1,3 +1,4 @@
+[![Update](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml/badge.svg)](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml)
 
 # 🛡️ NRD Lists - Block Newly Registered Domains
 
