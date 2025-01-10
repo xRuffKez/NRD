@@ -74,3 +74,15 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 - [Stamus Networks](https://www.stamus-networks.com/) for the NRD Lists
 - [openSquat](https://opensquat.com/index.html) for the NRD Lists
 - [HaGeZi](https://github.com/hagezi) for his helping hand and his great Blocklists
+
+---
+
+## NRD 30 Top 10 Tlds
+
+(img/stats.png)
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=xRuffKez/NRD&type=Timeline)](https://star-history.com/#xRuffKez/NRD&Timeline)
