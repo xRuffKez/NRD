@@ -1,4 +1,4 @@
-[![Update](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml/badge.svg)](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml)
+[![Update](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml/badge.svg)](https://github.com/xRuffKez/NRD/actions/workflows/hunter.yml)[Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxruffkez%2Fnrd&count_bg=%23754400&title_bg=%235F5F5F&icon=awesomelists.svg&icon_color=%23E7E7E7&title=visitors&edge_flat=false)](https://github.com/xruffkez/nrd)[![shields.io Stars](https://img.shields.io/github/stars/xruffkez/nrd)](https://github.com/xruffkez/nrd/stargazers)
 
 # 🛡️ NRD Lists - Block Newly Registered Domains
 
