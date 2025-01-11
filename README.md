@@ -52,7 +52,7 @@ Effortlessly block newly registered domains (NRDs) that are often used for malic
 
 - **False Positives:** Legitimate domains may sometimes be blocked. Review the lists and whitelist any domains essential to you.
 - **Phishing Lists:** Specifically target domains flagged for phishing activities.
-- **File size:** The Lists are huge! Expect your tools or browser to crash without enough system memory!
+- **File size:** <code style="color : red">The Lists are huge! Expect your tools or browser to crash without enough system memory!</code>
 
 ---
 
