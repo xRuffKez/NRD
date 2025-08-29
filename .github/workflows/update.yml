@@ -1,0 +1,77 @@
+name: Update Lists
+
+on:
+  schedule:
+    - cron: "10 5 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: |
+          mkdir -p lists/14day/domains-only lists/14day/adblock
+          mkdir -p lists/30day/domains-only lists/30day/adblock
+          mkdir -p tmp
+          urls_30="$URLS_30"
+          urls_14="$URLS_14"
+
+          handle_file () {
+            base=$1
+            dir=$2
+            f=$3
+            name=${base%.tar.gz}
+            name=${name#sti-domains-}
+            [ "$name" = "entropy-30" ] && name="dga-30"
+            [ "$name" = "entropy-14" ] && name="dga-14"
+            decoded="$dir/domains-only/$name.txt"
+            base64 -d "$f" | tr -d '\r' | awk '{print}' > "$decoded"
+            if [[ "$name" == "nrd-30" ]]; then
+              split -n 2 -d "$decoded" "$dir/domains-only/nrd-part"
+              mv "$dir/domains-only/nrd-part00" "$dir/domains-only/nrd-part1.txt"
+              mv "$dir/domains-only/nrd-part01" "$dir/domains-only/nrd-part2.txt"
+              rm "$decoded"
+              for p in part1 part2; do
+                awk '{print "||"$0"^"}' "$dir/domains-only/nrd-$p.txt" > "$dir/adblock/nrd-$p.txt"
+              done
+            else
+              shortname=${name%-14}
+              shortname=${shortname%-30}
+              awk '{print "||"$0"^"}' "$decoded" > "$dir/adblock/$shortname.txt"
+            fi
+          }
+
+          for u in $urls_30; do
+            curl -sSL "$u" -o tmp/file.tar.gz
+            tar -xzf tmp/file.tar.gz -C tmp
+            f=$(find tmp -type f -exec du -b {} + | sort -nr | head -1 | cut -f2)
+            handle_file "$(basename "$u")" "lists/30day" "$f"
+            rm -rf tmp/*
+          done
+
+          for u in $urls_14; do
+            curl -sSL "$u" -o tmp/file.tar.gz
+            tar -xzf tmp/file.tar.gz -C tmp
+            f=$(find tmp -type f -exec du -b {} + | sort -nr | head -1 | cut -f2)
+            handle_file "$(basename "$u")" "lists/14day" "$f"
+            rm -rf tmp/*
+          done
+          rm -rf tmp
+
+      - run: |
+          git add lists
+          git commit -m "Update lists" || echo "No changes to commit"
+          git push origin HEAD:main
+    env:
+      URLS_30: |
+        ${{ secrets.URL_30_NRD }}
+        ${{ secrets.URL_30_ENTROPY }}
+        ${{ secrets.URL_30_PHISHING }}
+      URLS_14: |
+        ${{ secrets.URL_14_NRD }}
+        ${{ secrets.URL_14_ENTROPY }}
+        ${{ secrets.URL_14_PHISHING }}
