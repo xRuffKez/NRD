@@ -63,6 +63,8 @@ jobs:
           rm -rf tmp
           
       - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           git add -A lists
           if ! git diff --cached --quiet; then
             git commit -m "Update lists"
@@ -70,6 +72,7 @@ jobs:
           else
             echo "No changes to commit"
           fi
+          
     env:
       URLS_30: |
         ${{ secrets.URL_30_NRD }}
