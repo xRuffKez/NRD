@@ -29,7 +29,11 @@ jobs:
             [ "$name" = "entropy-30" ] && name="dga-30"
             [ "$name" = "entropy-14" ] && name="dga-14"
             decoded="$dir/domains-only/$name.txt"
-            base64 -d "$f" | tr '0' '\n' | sed '/^\s*$/d' > "$decoded"
+            > "$decoded"
+            while IFS= read -r line; do
+              echo "$line" | base64 --decode >> "$decoded"
+              echo >> "$decoded"
+            done < "$f"
             if [[ "$name" == "nrd-30" ]]; then
               split -n 2 -d "$decoded" "$dir/domains-only/nrd-part"
               mv "$dir/domains-only/nrd-part00" "$dir/domains-only/nrd-part1.txt"
@@ -71,7 +75,6 @@ jobs:
             git push
           else
             echo "No changes to commit"
-          fi
     env:
       URLS_30: |
         ${{ secrets.URL_30_NRD }}
