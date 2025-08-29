@@ -61,11 +61,15 @@ jobs:
             rm -rf tmp/*
           done
           rm -rf tmp
-
+          
       - run: |
-          git add lists
-          git commit -m "Update lists" || echo "No changes to commit"
-          git push origin HEAD:main
+          git add -A lists
+          if ! git diff --cached --quiet; then
+            git commit -m "Update lists"
+            git push
+          else
+            echo "No changes to commit"
+          fi
     env:
       URLS_30: |
         ${{ secrets.URL_30_NRD }}
